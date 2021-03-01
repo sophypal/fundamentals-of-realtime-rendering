@@ -1,6 +1,8 @@
 import SceneObject from 'fundamentals/components/scene-object/component'
 import {action} from '@ember/object'
 import THREE from 'three'
+import TWEEN from '@tweenjs/tween.js'
+import _ from 'lodash'
 
 export default class extends SceneObject {
     // internal state
@@ -10,6 +12,9 @@ export default class extends SceneObject {
     defaults = {
         type: 'Scene'
     }
+
+    keyframes = []
+    animations = []
 
     constructor () {
         super(...arguments)
@@ -37,10 +42,45 @@ export default class extends SceneObject {
         this.buildScene()
     }
 
-    @action
-    animate () {
-        requestAnimationFrame(this.animate);
+    cacheKeyframes () {
+        this.traverse(component => {
+            if (component.args.keyframes) {
+                this.keyframes.push({
+                    component,
+                    kf: _.cloneDeep(component.args.keyframes)
+                })
+            }
+        })
 
+        this.keyframes.forEach(kf => {
+            this.animations.push(this.buildAnimation(kf))
+        })
+    }
+
+    buildAnimation ({component, kf}) {
+        const {from, to} = kf
+        const tweens = []
+
+        Object.keys(from).forEach(key => {
+
+            const tween = new TWEEN.Tween(from)
+                .to(to, kf.duration) 
+                .easing(TWEEN.Easing.Quadratic.Out)
+                .onUpdate(() => {
+                    component.updateObject(component.object, from)
+                })
+                .start()
+
+            tweens.push(tween)
+        })
+
+        return tweens
+    }
+
+    @action
+    animate (time) {
+        requestAnimationFrame(this.animate);
+        TWEEN.update(time)
         this.glRenderer.render(this.object, this.camera);
     }
 
@@ -57,6 +97,12 @@ export default class extends SceneObject {
         this.setupThree(element)
         this.setupScene()
 
-        this.animate();
+        this.cacheKeyframes()
+
+        if (this.args.onSceneInsert) {
+            this.args.onSceneInsert(this.object)
+        }
+
+        this.animate()
     }
 }

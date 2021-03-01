@@ -11,11 +11,18 @@ export default class SceneObject extends Component {
         return THREE[threeType]
     }
 
+    get props () {
+        if (this.args.keyframes) {
+            return this.args.keyframes.from
+        } else {
+            return this.args.props
+        }
+    }
+
     constructor () {
         super(...arguments);
         this.children = new Set();
 
-        this.object = this.buildObject()
 
         if (this.args.parent) {
             this.args.parent.registerChild(this);
@@ -36,8 +43,16 @@ export default class SceneObject extends Component {
         this.children.remove(child)
     }
 
+    traverse (iter) {
+        this.children.forEach(child => {
+            iter(child)
+
+            child.traverse(iter)
+        })
+    }
 
     buildScene () {
+        this.object = this.buildObject()
         this.children.forEach(child => {
             child.buildScene()
 
@@ -54,15 +69,29 @@ export default class SceneObject extends Component {
     }
 
     buildObject () {
+        let object
         if (this.args.constructorProps) {
-            return new this.type(...this.args.constructorProps)
+            object = new this.type(...this.args.constructorProps)
         } else {
-            return new this.type
+            object = new this.type
         }
+
+        if (this.props) {
+            this.updateObject(object, this.props)
+        }
+
+        return object
     }
 
-    updateObject (props = {}) {
-        Object.assign(this.object, props)
+    updateObject (object, props = {}) {
+        Object.entries(props).forEach(([key, value]) => {
+            switch (key) {
+                case 'position':
+                case 'rotation':
+                    object[key].set(value.x, value.y, value.z)
+                    break
+            }
+        }) 
     }
 
 }
