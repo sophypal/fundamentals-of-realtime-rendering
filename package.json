@@ -4,6 +4,7 @@
   "private": true,
   "description": "Small description for fundamentals goes here",
   "repository": "",
+	"homepage": "https://sophypal.github.io/fundamentals-of-realtime-rendering/",
   "license": "MIT",
   "author": "",
   "directories": {
