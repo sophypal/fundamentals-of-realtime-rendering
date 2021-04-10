@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import THREE from 'three';
+import config from 'fundamentals/config/environment';
 
 export default class extends Component {
     @action
@@ -9,7 +10,7 @@ export default class extends Component {
         group.position.y = -5;
         group.rotation.y = -Math.PI / 2;
 
-        component.loaders.gltf.load('/models/basictrex/basictrex.glb', (gltfObject) => {
+        component.loaders.gltf.load(config.rootURL + '/models/basictrex/basictrex.glb', (gltfObject) => {
             const object = gltfObject.scene;
 
             object.position.y = -5;

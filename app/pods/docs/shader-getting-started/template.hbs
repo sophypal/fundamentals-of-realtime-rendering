@@ -439,7 +439,7 @@
     <ProseFigure
         @figureId='8'
         @figureCaption='Using linear interpolation between 2 sample points from the original curve. It is analagous to using sampler2D(u, v) where u and v specifies the point at which we are interested in.'
-        @imageUrl='/figures/linear-interpolation-1.png'
+        @imageUrl={{root-url 'figures/linear-interpolation-1.png'}}
     />
     <ProseMarkdown>
         The shape of the curve affects the accuracy of this interpolation method. If the shape was actually
@@ -452,7 +452,7 @@
     <ProseFigure
         @figureId='9'
         @figureCaption='Increasing the number of samples, we can see that a line between any two neighboring sample points closely matches the original curve.'
-        @imageUrl='/figures/linear-interpolation-2.png'
+        @imageUrl={{root-url 'figures/linear-interpolation-2.png'}}
     />
     <ProseMarkdown>
         Another way of thinking of linear interpolation is as a weighted average between 2 points. That's probably a more intuitive way of thinking of it and it's a closer
@@ -481,7 +481,7 @@
     <ProseFigure
         @figureId='10'
         @figureCaption='7 levels of mipmaps with each level having double or half the resolution of the previous'
-        @imageUrl='/figures/mipmapping.gif'
+        @imageUrl={{root-url 'figures/mipmapping.gif'}}
     />
     <ProseMarkdown>
         ### Texture Example
@@ -492,7 +492,7 @@
     <ProseFigure
         @figureId='11'
         @figureCaption='This texture came from the megascans archive. They have dozens of free content but with an Unreal account, you can access all of them.'
-        @imageUrl='/textures/castle_wall.jpg'
+        @imageUrl={{root-url 'textures/castle_wall.jpg'}}
         @vertical={{true}}
     />
     <ProseMarkdown>
@@ -503,7 +503,7 @@
         ```javascript
         const loader = new THREE.TextureLoader();
 
-        loader.load('/textures/castle_wall.jpg', function (texture) {
+        loader.load('{{root-url 'textures/castle_wall.jpg'}}, function (texture) {
             const sphere = new THREE.Mesh(
                 new THREE.SphereBufferGeometry(1, 32, 32), // creates a sphere with radius 1 with 32 segments horizontally and vertically
                 new THREE.ShaderMaterial({

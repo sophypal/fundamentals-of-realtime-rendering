@@ -1,10 +1,11 @@
 import Component from '@glimmer/component';
+import config from 'fundamentals/config/environment';
 
 export default class extends Component {
     sceneEditorValue = `
 const loader = new THREE.TextureLoader();
 
-loader.load('/textures/castle_wall.jpg', function (texture) {
+loader.load('${config.rootURL}/textures/castle_wall.jpg', function (texture) {
     const sphere = new THREE.Mesh(
         new THREE.SphereBufferGeometry(1, 32, 32), // creates a sphere with radius 1 with 32 segments horizontally and vertically
         new THREE.ShaderMaterial({

@@ -6,7 +6,7 @@ module.exports = function (environment) {
     podModulePrefix: 'fundamentals/pods',
     environment,
     rootURL: '/',
-    locationType: 'auto',
+    locationType: 'hash',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -45,7 +45,7 @@ module.exports = function (environment) {
   }
 
   if (environment === 'production') {
-    // here you can enable a production-specific feature
+    ENV.rootURL = '/fundamentals-of-realtime-rendering'
   }
 
   return ENV;

@@ -2,7 +2,7 @@
 
 TMP_DEMO_DIR=.gh-pages
 
-ember build -e gh-pages
+ember build -e production
 git clone git@github.com:sophypal/fundamentals-of-realtime-rendering.git ${TMP_DEMO_DIR} > /dev/null 2>&1
 cd ${TMP_DEMO_DIR}
 git checkout gh-pages

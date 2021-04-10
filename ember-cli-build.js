@@ -9,13 +9,17 @@ const purgeCSS = {
         content: [
             './app/index.html',
             './app/templates/**/*.hbs',
-            './app/components/**/*.hbs'
+            './app/components/**/*.hbs',
+            './app/pods/**/*.hbs',
         ],
         defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || []
     }
 }
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
+    fingerprint: {
+      exclude: ['prism-components'],
+    },
     ace: {
       themes: ['monokai'],
       modes: ['javascript'],
@@ -31,7 +35,7 @@ module.exports = function (defaults) {
             }
           },
           require('tailwindcss')('./app/tailwind.config.js'),
-          ...isProduction ? [purgeCSS] : []
+          //...isProduction ? [purgeCSS] : []
         ]
       }
     }

@@ -13,7 +13,7 @@
     <ProseFigure
         @figureId='1'
         @figureCaption='An illustration of a ball. The soft shading is critical to show that this is a sphere.'
-        @imageUrl='/figures/artist_illustration_ball.png'
+        @imageUrl={{root-url 'figures/artist_illustration_ball.png'}}
     />
     <ProseMarkdown>
         Color alone isn't enough right? No, proportions also matter. The ball could be shaped more rigidly like a box and the edges smoothed
@@ -22,7 +22,7 @@
     <ProseFigure
         @figureId='2'
         @figureCaption="An illustration of a box but shaded like a sphere. Even with soft shadows, it's not very convincing."
-        @imageUrl='/figures/artist_illustration_sphere_shaded_box.png'
+        @imageUrl={{root-url 'figures/artist_illustration_sphere_shaded_box.png'}}
     />
     <ProseMarkdown>
         We perceive proportions in the real world though a lens, our eyes. The shape of this lens and the field of view changes the apparent
@@ -32,7 +32,7 @@
     <ProseFigure
         @figureId='3'
         @figureCaption="An artist's illustration of a 3D scene using perspective guidelines"
-        @imageUrl='/figures/artist_illustration_perspective.png'
+        @imageUrl={{root-url 'figures/artist_illustration_perspective.png'}}
     />
     <ProseMarkdown>
         ## Pinhole Camera
@@ -75,7 +75,7 @@
     <ProseFigure
         @componentName='figures/gltf-loader'
         @props={{hash
-            modelSrc='/models/camera/cam.gltf'
+            modelSrc=(root-url 'models/camera/cam.gltf')
         }}
         @figureId='5'
         @figureCaption='A DSLR camera is a beast of modern technology. They feature variable zoom, variable aperture, auto focus, stabilization, and much more.'

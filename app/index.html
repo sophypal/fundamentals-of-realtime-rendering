@@ -20,6 +20,9 @@
     {{content-for "body"}}
 
     <script src="{{rootURL}}assets/vendor.js"></script>
+    <script>
+      Prism.plugins.autoloader.languages_path = '{{rootURL}}prism-components/';
+    </script>
     <script src="{{rootURL}}assets/fundamentals.js"></script>
 
     {{content-for "body-footer"}}

@@ -110,8 +110,6 @@ export default class extends SceneObject {
 
         this.loaders.rgbe
             .setDataType(THREE.UnsignedByteType)
-            // .setPath('/textures/equirectangular/')
-            // .load('royal_esplanade_1k.hdr', (texture) => {
             .load(map, (texture) => {
                 const envMap = pmremGenerator.fromEquirectangular(texture)
                     .texture;

@@ -8,6 +8,5 @@
     };
   }
 
-  self.Prism.plugins.autoloader.languages_path = '/prism-components/';
   define('prism', [], vendorModule);
 })();

@@ -40,7 +40,7 @@
     <ProseFigure
         @figureId='2'
         @figureCaption='Vertex data is stored separate from the primitive data (tries). Index data defines the vertices to be used when rendering triangles.'
-        @imageUrl='/figures/vertex-index-buffer.png'
+        @imageUrl={{root-url 'figures/vertex-index-buffer.png'}}
         @vertical={{true}}
     />
     <ProseMarkdown>
@@ -101,7 +101,7 @@
     <ProseFigure
         @figureId='5'
         @figureCaption='UV mapping is a process of unfolding 3D geometry into a flat plane'
-        @imageUrl='/figures/uv_mapping.png'
+        @imageUrl={{root-url 'figures/uv_mapping.png'}}
         @vertical={{true}}
     />
     <ProseMarkdown>
@@ -110,10 +110,10 @@
     <ProseFigure
         @componentName='figures/gltf-loader'
         @props={{hash
-            modelSrc='/models/texturedtrex/trex.glb'
+            modelSrc=(root-url 'models/texturedtrex/trex.glb')
             modelPosition=(array 0 -5 0)
             modelRotation=(array 0 -90 0)
-            hdr=(hash map='/textures/equirectangular/crystal_falls_2k.hdr' background=false)
+            hdr=(hash map=(root-url 'textures/equirectangular/crystal_falls_2k.hdr') background=false)
         }}
         @figureId='6'
         @figureCaption='Textures add quite a bit of life into this dinosaur'
@@ -151,10 +151,10 @@
     <ProseFigure
         @componentName='figures/gltf-loader'
         @props={{hash
-            modelSrc='/models/trex/trex.glb'
+            modelSrc=(root-url 'models/trex/trex.glb')
             modelPosition=(array 0 -5 0)
             modelRotation=(array 0 -90 0)
-            hdr=(hash map='/textures/equirectangular/crystal_falls_2k.hdr' background=true)
+            hdr=(hash map=(root-url 'textures/equirectangular/crystal_falls_2k.hdr') background=true)
         }}
         @figureId='7'
         @figureCaption='Rendering using PBR Metalness-Roughness Workflow'

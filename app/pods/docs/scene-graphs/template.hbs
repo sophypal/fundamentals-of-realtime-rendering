@@ -20,7 +20,7 @@
     <ProseFigure
         @figureId='1'
         @figureCaption='Simple scene hierarchy'
-        @imageUrl='/figures/basic-scene-graph.png'
+        @imageUrl={{root-url 'figures/basic-scene-graph.png'}}
     />
     <ProseMarkdown>
         When a car moves, the internal components go with it, otherwise it would be weird for a car to move and leave it's engine
@@ -40,7 +40,7 @@
     <ProseFigure
         @figureId='2'
         @figureCaption='Transform hierarchy'
-        @imageUrl='/figures/transform-hierarchy.png'
+        @imageUrl={{root-url 'figures/transform-hierarchy.png'}}
     />
     <ProseMarkdown>
         In order to get the world position of the engine, we traverse the tree backwards from **engine** to **car**. Multiplying by the **world's** transform
@@ -54,7 +54,7 @@
     <ProseFigure
         @figureId='3'
         @figureCaption='Scene graph embedding transforms'
-        @imageUrl='/figures/scene-graph-w-transforms.png'
+        @imageUrl={{root-url 'figures/scene-graph-w-transforms.png'}}
     />
     <ProseMarkdown>
         Finding <KatexSpan>\boldsymbol{p}'</KatexSpan> from <KatexSpan>\boldsymbol{p}</KatexSpan> is as easy as
@@ -64,7 +64,7 @@
     <ProseFigure
         @figureId='4'
         @figureCaption='Scene graph from complex car model'
-        @imageUrl='/figures/car-scene-graph.png'
+        @imageUrl={{root-url 'figures/car-scene-graph.png'}}
         @vertical={{true}}
     />
     <ProseMarkdown>
@@ -99,12 +99,12 @@
     <ProseFigure
         @figureId='5'
         @figureCaption='Visualization of an octree. The scene is divided into 8 equal parts and is done recursively.'
-        @imageUrl='/figures/octree.jpeg'
+        @imageUrl={{root-url 'figures/octree.jpeg'}}
     />
     <ProseFigure
         @figureId='6'
         @figureCaption='Visualization of a BVH tree. The scene is divided bounding volumes of variable size.'
-        @imageUrl='/figures/bvhtree.png'
+        @imageUrl={{root-url 'figures/bvhtree.png'}}
         @vertical={{true}}
     />
 </div>

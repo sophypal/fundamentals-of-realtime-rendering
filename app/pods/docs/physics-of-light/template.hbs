@@ -18,7 +18,7 @@
     <ProseFigure
         @figureId='1'
         @figureCaption='The render equation is often like this. The viewer represented as a the view vector. The surface is a plane and a half-sphere represents all incoming light rays from all possible directions.'
-        @imageUrl='/figures/light_equation.png'
+        @imageUrl={{root-url 'figures/light_equation.png'}}
     />
     <ProseMarkdown>
         We're only concerned with the intensity of the light reaching the grid, which is commonly represented as an RGB value.
@@ -44,7 +44,7 @@
     <ProseFigure
         @figureId='2'
         @figureCaption='You can model each photon as a billiard ball. When it hits the surface, it bounces off at the same angle it entered.'
-        @imageUrl='/figures/reflectance.png'
+        @imageUrl={{root-url 'figures/reflectance.png'}}
         @imageBgColor='bg-white'
     />
     <ProseMarkdown>
