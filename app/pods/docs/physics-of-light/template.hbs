@@ -1,0 +1,97 @@
+<div class="relative px-4 sm:px-6 lg:px-8">
+    <Heading @title='The Physics of Light' @subtitle='The render equation explained'>
+        Lighting can drastically impact the quality of a render. Photorealistic lighting is complex and computationally intensive.
+        While the general lighting equation is simple and elegant, solving those equations can't be done analytically. Realtime
+        renderers uses solutions that approximate the result. The closer the approximation, the better the lighting quality but
+        usually more is computationally expensive. We'll discuss how light behaves in the real world in this chapter.
+    </Heading>
+    <ProseMarkdown>
+        ## Rendering Equation
+        <KatexBlock>
+            L_o(\bold{p}, \omega_o, \lambda)  = L_e(\bold{p},\omega_o, \lambda) + \int f_r(\bold{p},\omega_o,\omega_i, \lambda) L_i(\bold{p},\omega_i) \cos\omega_i \space d\omega_i
+        </KatexBlock>
+
+        Not much can be gleamed from that expression with no background in physics. This is often how I'm introduced to the subject
+        of rendering. Hopefully, a visual explanation is more helpful. To illustrate this, let's setup a grid that will act as our
+        computer monitor, a surface, and a light source.
+    </ProseMarkdown>
+    <ProseFigure
+        @figureId='1'
+        @figureCaption='The render equation is often like this. The viewer represented as a the view vector. The surface is a plane and a half-sphere represents all incoming light rays from all possible directions.'
+        @imageUrl='/figures/light_equation.png'
+    />
+    <ProseMarkdown>
+        We're only concerned with the intensity of the light reaching the grid, which is commonly represented as an RGB value.
+        Each cell on this grid is a pixel. Each pixel receives light either directly from a light source, or indirectly from
+        other surfaces. When it's direct, the direction is a stright shot to the source which can can be emitted from the surface
+        or the light source itself. This is described by the
+        <KatexSpan>L_e</KatexSpan> part of the formula.
+        <KatexBlock>
+            L_e(\bold{p},\omega_o, \lambda)
+        </KatexBlock>
+
+        The other half of the equation, <KatexSpan>\int f_r(\bold{p},\omega_o,\omega_i, \lambda) (L_i(\bold{p},\omega_i) \cos\omega_i \space d\omega_i \)</KatexSpan>
+        is commonly referred to as the reflectance and is described as the light intensity reflected or scattered from a surface. The value of the light exiting a surface, is the acculmination of light
+        from all directions reaching the surface. If there was no light in the scene, or a light source was being occluded,
+        then this value would be zero for that particular point on the surface.
+
+        In a simple scene with only 1 light source and 1 surface, this is easy to solve for. As there would be no other surfaces
+        that could reflect the same light source, the only direction to consider would be directly from the light source. Light
+        that hits a surface at an angle reflects off the surface at the same angle about the normal. A normal is the direction
+        exactly 90 degrees, or perpendicular to the surface.
+
+    </ProseMarkdown>
+    <ProseFigure
+        @figureId='2'
+        @figureCaption='You can model each photon as a billiard ball. When it hits the surface, it bounces off at the same angle it entered.'
+        @imageUrl='/figures/reflectance.png'
+        @imageBgColor='bg-white'
+    />
+    <ProseMarkdown>
+        ## Light Scatters
+
+        Light that is reflected from a surface, might not reach the viewer. In our case, the camera would need to be placed
+        parallel to this reflected ray. Not all surfaces are truly reflective like a mirror but we can still see them. Light that
+        is not reflected is refracted. When light hits a surface, it gets split into a reflection part and a refraction part.
+        The refracted part enters the surface where it is absorbed and scattered internally. Some of this light exits the surface
+        and at random angles which gives materials their characteristic colors. The function <span class='text-white' {{katex}}>\( f_r \)</span>
+        describes this reflection/refaction behavior and it is dependent on the angle of the light as well as the angle to the viewer.
+        Metal has a behavior that absorbs all light that is not reflected. Plastics can be a bit more complicated but each material
+        can be assigned different behaviors based on this function, which is the **BRDF** (bidirectional reflective distribution function).
+
+        The output of this function is a fractional value which is multiplied by the intensity of the incident (incoming) light.
+        This intensitity is further reduced depending on the angle of the light to the surface. If the light was directly above
+        the surface, it would get the maximum intensity. If instead it was parallel to the surface it would get no intensity.
+        This relationship can be modeled with the cosine trigonometric function where the value is 0 when the light is 90 degrees
+        from the surface normal and 1 when it is parallel.
+
+        Together this forms this part of the equation:
+        <KatexBlock>
+            f_r(\bold{p},\omega_o,\omega_i, \lambda) L_i(\bold{p},\omega_i) \cos\theta
+        </KatexBlock>
+
+        ## It's Not Really That Easy
+
+        In reality, light gets reflected more than once. A single ray of light would need to be absorbed completely before
+        its contribution can be eliminated in the equation. It can also come in any direction, except for the bottom half
+        the surface that is opposite the direction of light. There is no analytical solution so we'd need to either sample
+        randomly or integrate over this hemisphere in descrete steps. Because of the recursive nature of reflectance, we'd
+        need to do this multiple times for every surface that is within this half-sphere of influence.
+
+        ## What About Shadows?
+
+        Shadows occur intrinsicly due to absense of light. The light would need to be absorbed completely before reaching the
+        surface.  It's too costly for a real-time system. Systems
+        that use this equation fully are offline rendering ones. **Ray tracing** is a rendering technique that uses that approach.
+        You can produce soft shadows, simulate the effects of light through glass and other transparent substances like water. Rendering
+        a single frame can take hours, or even days, depending on the complexity.
+
+        ## Conclusion
+
+        That's where we'll leave it for now. Real-time techniques are the focus here but I felt this introduction was necessary to
+        show you what higher quality renderers do to achieve really realistic results. While the real-time techniques are cheaper,
+        modern tech like nVidia RTX cards offer built-in hardware with AI-assisted algorithms that offer real-time ray-tracing.
+        In addition, physically-based shading models, which offer real-time realistic shading of materials, are in heavy use in
+        the industry today.
+    </ProseMarkdown>
+</div>

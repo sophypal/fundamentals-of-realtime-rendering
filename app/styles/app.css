@@ -2,5 +2,12 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import "../components/scene/styles.css";
-@import "../test/styles.css";
+@import "../pods/components/scene/styles.css";
+@import "../pods/components/demo-viewer/styles.css";
+@import "prism-themes/themes/prism-nord.css";
+
+.prose pre.ace_editor, .prose-lg pre.ace_editor {
+  margin: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

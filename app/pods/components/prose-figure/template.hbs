@@ -1,0 +1,18 @@
+<div class="max-w-prose mx-auto mt-8 text-lg flex-col space-y-4" ...attributes>
+    {{#if @componentName}}
+        <div class='relative h-80'>
+            {{component @componentName props=@props}}
+        </div>
+    {{else}}
+        {{yield}}
+    {{/if}}
+    <figure class='{{if @imageUrl 'flex'}} {{if @vertical 'flex-col'}} space-x-4 space-y-4'>
+        {{#if @imageUrl}}
+        <img src={{@imageUrl}} class='rounded-lg {{@imageBgColor}}' />
+        {{/if}}
+        <figcaption style='{{if (and (not @vertical) @imageUrl) 'margin-top: 0;'}}'>
+            <span class='text-white font-semibold mr-1'>Figure {{@figureId}}</span>
+            <span class='text-gray-400 italic'>{{@figureCaption}}</span>
+        </figcaption>
+    </figure>
+</div>

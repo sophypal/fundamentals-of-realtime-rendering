@@ -1,0 +1,571 @@
+<div class="relative px-4 sm:px-6 lg:px-8">
+    <Heading @title='Getting Started' @subtitle='Hello World 2.0'>
+        Let's gain some practical experience writing shaders by rendering a simple 3D object, our hello world equivalent.
+        We'll be using THREE.js and GLSL in this tutorial so you can interact with the embedded editor.
+    </Heading>
+    <ProseMarkdown>
+        Hopefully the brief introduction into shader theory from the last chapter provide some clarity of on what steps you need to take to get a basic
+        scene rendered. We haven't been focused too much on syntax up to this point for a reason. I wanted you to see, at a high-level
+        how things would fit together.
+
+        ## Supplying Mesh Data
+
+        Let's introduce a new mesh and add it to the scene. Specifying the mesh vertices, normals, uvs can be a time consuming process. When it's not
+        done procedurally, it's modeled in a separate program. Luckily for us, **THREE.js** has some built-in procedural geometry to choose from. Since
+        this whole series is about shaders, I'll avoid manually defining this mesh data so we can focus on mastering shader programming.
+
+        The online editor has already been setup for **THREE.js**. If you'd like to follow along from scratch, I recommend reading the *Getting Started*
+        page at **THREE.js**. Otherwise, open the [Playground](/playground) and follow along.
+
+        In **THREE.js**, a mesh can be created by using **THREE.Mesh**. Vertex information is attached to this mesh with **THREE.BufferGeometry**. Shaders are
+        encapsulated in **THREE.js** as a material. This is a common concept used throughout the graphics industry. Materials are basically shaders and
+        the terminology are often interchanged.
+
+        Let's add a sphere mesh to our scene.
+
+        ```javascript
+        const sphere = new THREE.Mesh(
+            new THREE.SphereBufferGeometry(1, 32, 32), // creates a sphere with radius 1 with 32 segments horizontally and vertically
+            new THREE.ShaderMaterial({
+                vertexShader: vertexShaderSource, // vertexShaderSource is the content of the vertex shader editor
+                fragmentShader: fragmentShaderSource, // fragmentShaderSource is the content of the fragment shader editor
+            })
+        );
+
+        scene.add(sphere);
+        ```
+
+        In **THREE.js**, there's a slew of built-in materials ranging from really basic ones to more advanced physically-based ones. We'll be
+        using **THREE.ShaderMaterial** because we're defining our own. We'll be using it instead of **THREE.RawShaderMaterial** because
+        it provides some basic uniforms that will be useful to us.
+
+        ## Transform into Clip Space
+
+        Now we have vertices. Let's lean on **THREE.js** here and rely on it's rendering loop. We just need to know that at some point in time,
+        it will compile the shaders, pass the vertex data, and issue draw calls.
+
+        Let's define the vertex shader.
+
+        ```glsl
+        // uniform mat4 projectionMatrix; // provided by ShaderMaterial
+        // uniform mat4 modelViewMatrix; // provided by ShaderMaterial
+        // attribute vec3 position; // provided by SphereBufferGeometry
+
+        void main()
+        {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+        ```
+
+        Let's summarize what's happening. The goal of the vertex shader is to provide a position in clip space for every vertex. Each shader
+        invocation is given one vertex to process so it only needs to output one vertex. **gl_Position** is a global variable reserved as the
+        output of this shader. It's a **vec4** because it requires the **w** component which is used for perspective division but that step isn't
+        performed in this stage. Nothing is stopping you from doing it yourself in this shader but **w** needs to be set back to **1.0** so it's
+        not performed again.
+
+        The transformation being performed here is pretty vanilla. **position** is converted into a **vec4** because you need a **vec4** in order
+        to multiply against a <KatexSpan>4 \times 4</KatexSpan> matrix. **modelViewMatrix** and **projectionMatrix** are <KatexSpan>4 \times 4</KatexSpan> matrices that are passed in as **uniforms**. Together,
+        this transformation first transforms the position to view space, followed by a projection.
+
+        **modelViewMatrix** is the **worldMatrix** concatenated with the camera's view space transform. If you can recall, this is calculated as
+
+        ```javascript
+        camera.matrixWorldInverse * object.matrixWorld
+        ```
+
+        The the final multiplication with the projection reshapes the view space into clip space.
+
+        ## Color All The Pixels
+
+        How do we get color information over to the fragment shader. There are multiple methods. The one you choose will depend on what style
+        you're looking for.
+
+        * You can hardcode the color value so that every pixel gets the same color
+        * You can pass a color in as a **uniform**
+        * You can pass color as a **vertex attribute**
+        * You can generate a color per-vertex or per-pixel
+        * You can sample the color from a texture
+
+        We'll go over each one of these methods but it's important to note that there are generally only 2 ways colors will get shaded. It's
+        either per-vertex or per-pixel shading. Colors defined at the vertex shader output will get interpolated across all pixels the primitive
+        covers. Calculations done at the vertex-level are cheaper but can give poor results if data is not linear.
+
+        Let's explore the per-vertex approach and we'll follow this up with the per-pixel approach.
+
+        ### Hardcoding the color value
+
+        ```glsl
+        void main() {
+            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // color is a vec4 because of alpha
+        }
+        ```
+
+        This is how it should look like.
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/getting-started/hardcoded-color'
+        @figureId='1'
+        @figureCaption='Hardcoding color in the fragment shader'
+    />
+    <ProseMarkdown>
+        Simple as that. We've colored our sphere red. An alpha is 1.0 appropriate for opaque objects. They don't come into play until we learn
+        how to deal with transparent objects.
+
+        ### Pass in the color value as a uniform
+
+        To make this color configurable, make it a **uniform**. Modify your fragment shader to take a **uniform** input.
+
+        ```glsl
+        uniform vec3 color;
+
+        void main() {
+            gl_FragColor = vec4(color, 1.0);
+        }
+        ```
+
+        This should output a black sphere. The **uniform** isn't bound yet so we have to do that in our scene code. Modify that to add this
+        new **uniform**.
+
+        ```javascript
+        const sphere = new THREE.Mesh(
+            new THREE.SphereBufferGeometry(1, 32, 32), // creates a sphere with radius 1 with 32 segments horizontally and vertically
+            new THREE.ShaderMaterial({
+                /// new code block ///
+                uniforms: {
+                    color: {
+                        value: new THREE.Color(0xffff00),
+                    },
+                },
+                //////////////////////
+                vertexShader: vertexShaderSource, // vertexShaderSource is the content of the vertex shader editor
+                fragmentShader: fragmentShaderSource, // fragmentShaderSource is the content of the fragment shader editor
+            })
+        );
+
+        scene.add(sphere);
+        ```
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/getting-started/uniform-color'
+        @figureId='2'
+        @figureCaption='Passing the color as a uniform'
+    />
+    <ProseMarkdown>
+        ### Pass in the color value as an attribute
+
+        Right now, the sphere is looking pretty boring. It's just a single color. For the sake of experimentation, let's get funky
+        and randomize the color of the sphere. We can generate this color and assign it to each individual vertex or face or even
+        pixels. For this exercise, we'll focus on per vertex colors. But in case you're curious, coloring per face can be done by
+        giving the same colors to each vertex associated with a face.
+
+        In theory, all we would have to do to assign a color value to each vertex is to attach color information to a **vertex attribute**.
+        Unlike passing **uniforms**, passing **attributes** require we update the **BufferGeometry**. Since **vertex attributes** are per vertex
+        information, we'd need to assign a unique color per vertex. Fortunately for us, **BufferGeometry** makes it easy to update these attributes
+        with **setAttribute**.
+
+        Let's modify the code again.
+
+        ```javascript
+        const sphereGeometry = new THREE.SphereBufferGeometry(1, 32, 32);
+        const colors = [];
+
+        for (let i = 0; i &lt; sphereGeometry.getAttribute('position').count; ++i) {
+            const color = [Math.random(255), Math.random(255), Math.random(255)];
+            colors.push(color[0], color[1], color[2]);
+        }
+
+        sphereGeometry.setAttribute('color', new THREE.Float32Attribute(colors, 3));
+
+
+        const sphere = new THREE.Mesh(
+            sphereGeometry,
+            new THREE.ShaderMaterial({
+                vertexColors: true, // enables vertex coloring so vColor is available to our shader
+                vertexShader: vertexShaderSource, // vertexShaderSource is the content of the vertex shader editor
+                fragmentShader: fragmentShaderSource, // fragmentShaderSource is the content of the fragment shader editor
+            })
+        );
+
+        scene.add(sphere);
+        ```
+
+        Now we have to pipe his per-vertex color out to the fragment shader. We do that by creating a **varying** variable.
+
+        vertex shader:
+
+        ```glsl
+        varying vec3 outColor;
+
+        void main()
+        {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            outColor = color;
+        }
+        ```
+
+        fragment shader:
+
+        ```glsl
+        varying vec3 outColor;
+
+        void main()
+        {
+            gl_FragColor = vec4(outColor, 1.0);
+        }
+        ```
+
+        And here we have a sphere with smoothly-shaded randomized colors. That seemed like a lot of work. Why would anyone
+        ever want to do that. Setting up vertex in **THREE.js** is actually fairly straightforward but I understand if
+        this might seem a little over the top for this use case of generating random colors. You probably already thought
+        to yourself that this can easily be generated in shaders and you'd be right.
+
+        The truth is, vertex coloring has fallen out of favor long ago, at least as a rendering
+        technique. It still has usage for creating id maps which are then baked and used in other material processes.
+        Of course, you're going for that retro look, then this is a performance friendly way to achieve that. Nowadays,
+        color is provided by textures. More on that later.
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/getting-started/vertex-colors'
+        @figureId='3'
+        @figureCaption='Passing the color as an attribute'
+    />
+    <ProseMarkdown>
+        NOTE: *There seems to be a problem with the seams of this sphere geometry. While normally with just vertex coloring
+        you're not suppose to get seems as the colors are smoothly blended between neigbhoring vertexes. This might be
+        an issue with the mesh as edges that don't share vertices won't blend*.
+
+        ### Generating colors procedurally in the shader
+
+        Let's do the same thing but in our vertex shader. Revert your changes to the scene by removing the color generator,
+        the **setAttribute**, and **vertexColor** flag.
+
+        Since we're in shader land, there is no built-in random number generator. We'll do something else to generate those colors.
+
+        vertex shader:
+        ```glsl
+        varying vec3 outColor;
+
+        void main()
+        {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            outColor=vec3(uv.s, uv.t, 0.0); // uv is another vertex attribute which automatically gets declared by THREE.js and setup with SphereBufferGeometry
+        }
+        ```
+
+        If you can recall, **uv**s are coordinates that are assigned to each vertex to help determine how a texture can be mapped onto its surface.
+        In the code above, the red channel increases as **uv.s** increases which means the color of the pixels gets more red when **uv.s** approach 1. At the same time,
+        **uv.t** increases from bottom to top, increasing the value of the green channel.
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/getting-started/vertex-gen'
+        @figureId='4'
+        @figureCaption='Generating color in the vertex shader'
+    />
+    <ProseMarkdown>
+        Let's do the same thing but in the fragment shader. Modify the vertex and fragment shader.
+
+        vertex shader:
+        ```glsl
+        varying vec2 vUV;
+        void main()
+        {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            vUV = uv;
+        }
+        ```
+        fragment shader:
+
+        ```glsl
+        varying vec2 vUV;
+
+        void main()
+        {
+            gl_FragColor = vec4(vUV.s, vUV.t, 0.0, 1.0);
+        }
+        ```
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/getting-started/frag-gen'
+        @figureId='5'
+        @figureCaption='Generating color in the fragment shader'
+    />
+    <ProseMarkdown>
+        We get the same effect here but we also had to pass the **vertex attribute** over to the fragment shader. So what is the purpose of doing this
+        in the fragment shader? Well, not much for this use case at least. The UV data is linear in nature so the interpolation actually gives us
+        the correct results. The value of doing things in the fragment shader becomes more apparent as we try to do things that will vary non-linearly.
+
+        Let's try a non-linear use case. We'll do both a per-vertex and per-pixel approach.
+
+        ### Per-vertex non-linear scenario
+
+        vertex shader:
+
+        ```glsl
+        varying vec4 vColor;
+
+        void main() {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            vec3 vPos = (modelViewMatrix * vec4(position, 1.0)).xyz;
+            vec3 vNormal = normalMatrix * normal;
+
+            vec3 lightPos = (viewMatrix * vec4(1.0, 1.0, 1.0, 1.0)).xyz;
+            float attenuation = 1.0 / pow(length(lightPos - vPos), 2.0);
+            vec3 lightDir = normalize(lightPos - vPos);
+            vec3 lightDirView = (viewMatrix * normalize(vec4(lightDir, 0.0))).xyz;
+
+            vColor = vec4(1.0, 1.0, 0.0, 1.0) * max(dot(lightDirView, vNormal), 0.0);
+        }
+        ```
+
+        fragment shader:
+
+        ```glsl
+        varying vec4 vColor;
+
+        void main() {
+            gl_FragColor = vColor;
+        }
+        ```
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/getting-started/per-vertex-lighting'
+        @figureId='6'
+        @figureCaption='Adding basic point lighting to the scene'
+    />
+    <ProseMarkdown>
+        I introduced quite a lot of new concepts and functions here. I'll try to walk you through each one.
+
+        First, here's the theory. I'm trying to calculate the effect a point light would have on the surface if it was positioned slightly above it.
+        This involves knowing where this light is positioned in space. Recall from an earlier tutorial on the physics of light, we need to know
+        the direction of the surface normal and the direction of the light (often expressed as a unit vector pointing towards the light source).
+
+        When the surface is directly facing this light source, it gets 100% of the intensity. When it's facing away or perpendicular to this, it
+        gets 0%. Using the relationship between the surface normal and the light direction, this phenomenom can be modeled with a cosine function.
+        This is where the **dot** function comes in. It calculates the <KatexSpan>\cos</KatexSpan> of the **unit vectors**.
+
+        For point lights and spot lights, there's another matter we have to consider. The distance away from the light source. Light intensity attenuates
+        over distances. It fades away in a non-linear way. This attenuation doubles for every unit distance traveled. Using <KatexSpan>1 \over d^2</KatexSpan>, we can model
+        this too.
+
+        Here's the pseudocode.
+
+        1. calculate position of vertex in view space.
+            * multiply position vector by **viewMatrix**
+        2. calculate normal direction in view space.
+            * multiply normal vector by **viewMatrix**
+        3. calculate light position and direction in view space
+            * define light position in world space.
+            * multiply light position by **viewMatrix**
+            * subtract light position from vertex position which creates a directional vector from vertex to light position
+            * normalize light direction
+        4. calculate distance fall off
+            * distance fall off is determined by <KatexSpan>1 \over d^2</KatexSpan>
+            * take length of vector between light position and position vector and square it with pow
+            * take 1 over the result
+        5. using normal vector and light direction, calculate diffuse component of this light source and apply it to the objects color
+            * use **dot(normal, lightDir)** to get **cos** value of -1 to 1
+            * the diffuse cannot be negative, clamp it at 0 to 1.
+            * multiply this result by the objects color
+            * multiply by the distance fall off
+
+        NOTE: *the reason why we need to transform everything in view space is because the **normalMatrix** provided by **THREE.js** is derived from the **modelViewMatrix**. This normal matrix
+        is the matrix used to transform the normals just as **modelViewMatrix** is used to transform positions*.
+
+        ## Per-pixel non-linear scenario
+
+        Let's do that again but perform the same instructions in the fragment shader. We'll shift some things around so color is generated
+        at the pixel level. We need to pass around the vertex position and normal around but this time we'll do the light calculations there.
+        Make sure to open a new playground window and keep the other for comparison.
+
+        fragment shader:
+
+        ```glsl
+        varying vec3 vPos;
+        varying vec3 vNormal;
+
+        void main() {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            vPos = (modelViewMatrix * vec4(position, 1.0)).xyz;
+            vNormal = normalMatrix * normal;
+        }
+        ```
+
+        fragment shader:
+        ```glsl
+        varying vec3 vPos;
+        varying vec3 vNormal;
+
+        void main() {
+            vec3 lightPos = (viewMatrix * vec4(1.0, 1.0, 1.0, 1.0)).xyz;
+            float attenuation = 1.0 / pow(length(lightPos - vPos), 2.0);
+            vec3 lightDir = normalize(lightPos - vPos);
+            vec3 lightDirView = (viewMatrix * normalize(vec4(lightDir, 0.0))).xyz;
+
+            gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0) * dot(lightDirView, vNormal) * attenuation;
+        }
+        ```
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/getting-started/per-pixel-lighting'
+        @figureId='7'
+        @figureCaption='Adding basic point lighting to the scene (per-pixel)'
+    />
+    <ProseMarkdown>
+        Do you notice a difference. No? Maybe? Try lowering the resolution of the mesh for both examples. 16 might be a good number. See the difference now?
+        I think the difference was obvious at first but it is true that lowering the resolution amplies the differences. This spot light effect
+        has more impact with the per-pixel version while per-vertex is dull.
+
+        The reason is because in the per-vertex case, color is produced per vertex then blended. If the light's intensity was linear, the differences
+        would be hard to spot but the intensity over distance follows the inverse square law (not linear). The higher the resolution, the more densily
+        packed the vertices are and the less distance they cover.
+
+        If the quality is so great when doing things per-pixel, why don't we do it all the time. Well surprise, it's because of performance. Doing math
+        heavy calculations in the fragment shader is much more expensive then in the vertex shader. 1 shader invocation per pixel means performance is
+        heavily dependent on display resolution. Like everything, there's a balance. One way developers have been able to squeeze out every little performance
+        out of shaders is precomputing things and storing them in textures. Texture fetches do incur a cost but due to modern GPU architecture, it's often
+        cheaper to do that then do math heavy operations. Let's talk about textures next.
+
+        ## Textures
+
+        In shaders, textures are **Samplers**, either (**sampler2D**, or **samplerCube**). Samplers are our gateway for accessing the texture in the shader. In **GLSL**,
+        a texture lookup requires calling the built-in function **texture** and you pass in the sampler along with a valid texture coordinate. We need a **sampler**
+        because, well, we're not exactly retrieving texels. We're retrieving samples. The texture coordinates you provide could map to one or many texels.
+        It can even not address a single texel. You can think of this sampler as a texel generator. It tries to return a pixel color at the coordinates you
+        requested, and more often then not, this color is generated by taking samples from neighboring texels around that coordinate.
+
+        At it's root, it's basically performing linear interpolation. For simple one-dimensional linear interpolation, you can picture this operation as drawing
+        a line between two points and the extrapolated point is taken from this line.
+    </ProseMarkdown>
+    <ProseFigure
+        @figureId='8'
+        @figureCaption='Using linear interpolation between 2 sample points from the original curve. It is analagous to using sampler2D(u, v) where u and v specifies the point at which we are interested in.'
+        @imageUrl='/figures/linear-interpolation-1.png'
+    />
+    <ProseMarkdown>
+        The shape of the curve affects the accuracy of this interpolation method. If the shape was actually
+        a line, then the extrapolated point is accurate. If the shape was an exponential curve, then it's far from the truth. For textures,
+        this shape is a lot noisier and discontinous meaning not all values between **x0** and **x1** are there.
+
+        In the figure above, you can already see a discrepancy between the actual value vs the extrapolated value. Increasing the number of samples
+        can actually help. The more samples you have, the closer the line models the curve.
+    </ProseMarkdown>
+    <ProseFigure
+        @figureId='9'
+        @figureCaption='Increasing the number of samples, we can see that a line between any two neighboring sample points closely matches the original curve.'
+        @imageUrl='/figures/linear-interpolation-2.png'
+    />
+    <ProseMarkdown>
+        Another way of thinking of linear interpolation is as a weighted average between 2 points. That's probably a more intuitive way of thinking of it and it's a closer
+        representation of what happens with texture sampling. When sampling a texture, the coordinates **u** and **v**, specifies where in the texture to sample.
+        Texture quality is highest when 1 texel = 1 pixel which just means the size of the texture in screen space matches the original size of the texture.
+        This almost never occurs in **3D** as you can zoom in and out as well as look at it from any angle. Zooming requires that the texture be magnified or minified.
+
+        What happens when you zoom in really far and the pixel doesn't line up to a texel at all. That texel has to be constructed from scratch with a best guess method called
+        filtering. The quality of this reconstruction will be based on the filtering method you choose and the resolution of this image. There's only so much you can do because
+        we're actually trying to reconstruct something that doens't exist so we use methods like linear interpolation to extrapolate what it might be.
+
+        What happens when you zoom in? Well the same thing happens but this time it's a minification problem and you have many more samples to choose from.
+        There are multiple types of filtering methods like **nearest-neighbor**, **linear**, **bilinear**, **anisotropic** with anisotropic being the highest quality. Unfortunately for **WebGL**,
+        we're stuck with using **nearest** and **linear**.
+
+        These texture parameters are specified when creating and binding textures. **THREE.js** takes care of this for us when loading textures. When you pass a texture to your shader,
+        it becomes a sampler.
+
+        ### MipMapping
+
+        MipMapping is another important topic worth mentioning. MipMapping is a process where multiple resolutions of a texture are created. Since these images are precomputed, they can
+        use more expensive filtering methods. The resulting image can look more detailed and have less noise overall and it eases the burden on the **GPU**. In **WebGL** 1.0, you are limited
+        to images that have resolutions that are *POT* (powers of two). Otherwise, you can't get the built-in mipmap support. THREE.js handles this under the hood and by default
+        will generate mipmaps assuming of course the image is a *POT*.
+    </ProseMarkdown>
+    <ProseFigure
+        @figureId='10'
+        @figureCaption='7 levels of mipmaps with each level having double or half the resolution of the previous'
+        @imageUrl='/figures/mipmapping.gif'
+    />
+    <ProseMarkdown>
+        ### Texture Example
+
+        Enough theory, lets do some exercises. First things first, we need a texture. If you're using **playground**, you're limited to the ones on this site due to **CORS** (cross-origin resource sharing) policies.
+        For this example, let's use this texture.
+    </ProseMarkdown>
+    <ProseFigure
+        @figureId='11'
+        @figureCaption='This texture came from the megascans archive. They have dozens of free content but with an Unreal account, you can access all of them.'
+        @imageUrl='/textures/castle_wall.jpg'
+        @vertical={{true}}
+    />
+    <ProseMarkdown>
+        We need to load this texture and pass this along to our shaders. Textures are generally applied in the fragment shader so we'll also need to update it to receive our texture.
+
+        scene:
+
+        ```javascript
+        const loader = new THREE.TextureLoader();
+
+        loader.load('/textures/castle_wall.jpg', function (texture) {
+            const sphere = new THREE.Mesh(
+                new THREE.SphereBufferGeometry(1, 32, 32), // creates a sphere with radius 1 with 32 segments horizontally and vertically
+                new THREE.ShaderMaterial({
+                    /// new code block ///
+                    uniforms: {
+                        map: {
+                            value: texture,
+                        },
+                    },
+                    //////////////////////
+                    vertexShader: vertexShaderSource, // vertexShaderSource is the content of the vertex shader editor
+                    fragmentShader: fragmentShaderSource, // fragmentShaderSource is the content of the fragment shader editor
+                })
+            );
+
+            scene.add(sphere);
+        });
+        ```
+
+        In this example, the mesh isn't created until the texture is loaded. Once it's loaded, the texture can be applied directly to the **uniforms**
+        where it was given the name **map** just to be consistent with other **THREE** materials. Since this is a **uniform**, it can be accessed by either
+        vertex shader or fragment shader. No varyings for the texture is needed because the resource is constant across all shader invocation.
+        We do need to have proper texture coordinates so let's create a simple vertex shader to pass that info along.
+
+        vertex:
+        ```glsl
+        varying vec2 vUv;
+
+        void main() {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            vUv = uv;
+        }
+        ```
+
+        Next up is the fragment shader. Texture lookup is simple. Use **texture** and pass in the sampler, and some texture coordinate ranging from 0-1 for both u and v.
+
+        ```glsl
+        varying vec3 vPos;
+        varying vec3 vNormal;
+        varying vec2 vUv;
+
+        uniform sampler2D map;
+
+        void main() {
+            gl_FragColor = texture(map, vUv);
+        }
+        ```
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/getting-started/texture'
+        @figureId='12'
+        @figureCaption='Adding per-pixel colors with textures'
+    />
+    <ProseMarkdown>
+        We're not only limited to storing color information in textures. Pretty much any data can be stored in textures. In more advance materials, **PBR** materials for example,
+        there are separate textures for normals, roughness, metalness, occlusion, .etc. Even shadows can be stored in textures so that shadows don't have to be computed in real time.
+
+        ## What Else
+
+        I've only scratched the surface with what you can do with shaders. As long as you stick to the requirement that all shaders are
+        independent, there's no limit to what you can do. Continue to the next tutorial if you'd like to learn how to do cool stuff
+        with fragment shaders.
+
+    </ProseMarkdown>
+</div>

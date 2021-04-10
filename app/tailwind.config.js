@@ -1,11 +1,29 @@
-/* global module */
-const colors = require('tailwindcss/colors')
+/* global module, require */
+const colors = require('tailwindcss/colors');
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
   purge: [],
   presets: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            'h1,h2,h3,h4,h5,blockquote,strong,code,thead': {
+              color: 'white',
+            },
+            a: {
+              color: 'rgba(165, 180, 252)',
+            },
+          },
+        },
+      },
+    },
     screens: {
       sm: '640px',
       md: '768px',
@@ -152,11 +170,14 @@ module.exports = {
       1: '1 1 0%',
       auto: '1 1 auto',
       initial: '0 1 auto',
-      none: 'none',
+      none: 'none'
     },
     flexGrow: {
       0: '0',
       DEFAULT: '1',
+      1: '1',
+      2: '2',
+      3: '3'
     },
     flexShrink: {
       0: '0',
@@ -852,5 +873,5 @@ module.exports = {
     wordBreak: ['responsive'],
     zIndex: ['responsive', 'focus-within', 'focus'],
   },
-  plugins: [],
-}
+  plugins: [require('@tailwindcss/typography')],
+};

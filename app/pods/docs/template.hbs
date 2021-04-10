@@ -1,0 +1,58 @@
+<div class="h-screen flex flex-row">
+    <div class="flex flex-col w-72 overflow-y-auto">
+        <div class="flex flex-col flex-grow pt-5 pb-4 bg-gray-800">
+            <div class="flex px-4">
+                <div class='relative flex items-center space-x-4'>
+                    <div>
+                        <SvgIcon @name='camera' class='w-10 h-10 text-indigo-300' />
+                        <div class='text-white font-semibold transform bg-red-600 rounded p-1 text-xs'>BETA</div>
+                    </div>
+                    <div class='text-white'>
+                        <div class='text-m uppercase text-indigo-300'>Fundamentals of 3D</div>
+                        <div class='text-xl font-semibold'>Realtime Rendering</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 flex-grow flex flex-col">
+                <nav class="flex-1 px-2 space-y-1 bg-gray-800 text-gray-300" aria-label="Sidebar">
+                {{#each this.navigation as |nav|}}
+                    <div class="space-y-1">
+                        {{#if nav.links}}
+                            <button {{on "click" (fn this.onNavClicked nav.label)}} class="group w-full flex items-center pl-2 pr-1 py-2 text-sm font-medium rounded-md text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <SvgIcon @name='folder' class="text-gray-300 group-hover:text-gray-300 mr-3 h-6 w-6" />
+                                {{nav.label}}
+                                <SvgIcon @name='expand' class="{{if nav.expanded "text-white rotate-90" "text-gray-300"}} ml-auto h-5 w-5 transform group-hover:text-white transition-colors ease-in-out duration-150" />
+                            </button>
+                        {{else}}
+                            {{#link-to nav.route class=(concat (if (eq this.currentRoute nav.route) 'bg-gray-900 text-white ') 'group w-full flex items-center pl-2 py-2 text-sm font-medium rounded-md')}}
+                                <SvgIcon @name='{{nav.icon}}' class='mr-3 h-6 w-6' />
+                                {{nav.label}}
+                            {{/link-to}}
+                        {{/if}}
+                        {{#if nav.expanded}}
+                            {{#each nav.links as |subnav|}}
+                                <div class="space-y-1">
+                                    {{#if subnav.external}}
+                                        <a href={{subnav.href}} class='group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium rounded-md hover:text-white hover:bg-gray-700'>
+                                            {{subnav.label}}
+                                        </a>
+                                    {{else}}
+                                        {{#link-to subnav.route class=(concat (if (eq this.currentRoute subnav.route) 'bg-gray-900 text-white ') 'group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium rounded-md hover:text-white hover:bg-gray-700')}}
+                                            {{subnav.label}}
+                                        {{/link-to}}
+                                    {{/if}}
+                                </div>
+                            {{/each}}
+                        {{/if}}
+                    </div>
+                {{/each}}
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="min-h-full flex-1 overflow-y-auto bg-gray-900 scroll-container">
+        <div class="px-8 py-16 text-white font-medium ">
+            {{outlet}}
+        </div>
+    </div>
+</div>

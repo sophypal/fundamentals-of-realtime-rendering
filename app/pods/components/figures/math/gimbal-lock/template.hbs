@@ -1,0 +1,19 @@
+<DemoViewer
+    @cameraPosition={{hash x=0 y=5 z=10}}
+    @cameraLookAt={{hash x=0 y=0 z=0}}
+    @controlDef={{this.controlDef}}
+    @onControlChanged={{this.onControlChanged}}
+    @iframeIdentifier='gimbal-lock'
+as |parent|>
+    <SceneObject
+        @parent={{parent}}
+        @type='GridHelper'
+        @constructorProps={{array 100 20 (to-number "0x3486eb") (to-number "0x666666")}}
+    />
+    <Gimbal
+        @parent={{parent}}
+        @rotateX={{this.controlData.rotateX}}
+        @rotateY={{this.controlData.rotateY}}
+        @rotateZ={{this.controlData.rotateZ}}
+    />
+</DemoViewer>

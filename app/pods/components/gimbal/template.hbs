@@ -1,0 +1,3 @@
+{{#each this.properties as |prop|}}
+  {{did-update (fn this.updateArg prop) (get this.args prop)}}
+{{/each}}

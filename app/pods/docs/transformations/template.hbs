@@ -1,0 +1,883 @@
+<div class="relative px-4 sm:px-6 lg:px-8">
+    <Heading @subtitle='Describing our world with math' @title='Transformations'>
+        Learning how to transform vectors is a crucial skill if not the most important. While it's not necessary to
+        remember how to construct a rotation matrix by heart, knowing why it works can open the gates to learning
+        more advance topics. This will be a big article so take your time and don't proceed any further until you
+        have a good intuition on what's going on.
+    </Heading>
+    <ProseMarkdown>
+        ## Vector Operations
+
+        Let's establish some basic rules for working with vectors. You can add and subtract vectors. Even multiply
+        and divide them.
+
+        ### Addition/Subtraction
+
+        Adding vectors is done component-wise. You can treat each component of <KatexSpan>[v_x, v_y, v_z]</KatexSpan> separately.
+        Let <KatexSpan>\boldsymbol{a} = [1,1,1]</KatexSpan> and <KatexSpan>\boldsymbol{b} = [1,1,1]</KatexSpan> then
+        <KatexSpan>\boldsymbol{a} + \boldsymbol{b} = [2,2,2]</KatexSpan>. Subtraction uses the same principle. Subtraction is also basically addition with a
+        negative value.
+
+        <KatexBlock>
+            \boldsymbol{a} + \boldsymbol{b} = [a_x + b_x,a_y + b_y,a_z + b_z]
+        </KatexBlock>
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/math/adding-vec'
+        @figureId='1'
+        @figureCaption="What's the result of adding (5, 2, 3) to A. Can you visualize what that might look like?"
+    />
+    <ProseMarkdown>
+        A good visualization tool to build an intuition for this is to imagine attaching the tail of <KatexSpan>\boldsymbol{b}</KatexSpan>, to the
+        head of <KatexSpan>\boldsymbol{a}</KatexSpan>. In other words, the point at <KatexSpan>\boldsymbol{a}</KatexSpan> becomes the new origin for <KatexSpan>\boldsymbol{b}</KatexSpan>, and <KatexSpan>\boldsymbol{b}</KatexSpan>'s position is relative
+        to the new coordinate space created from <KatexSpan>\boldsymbol{a}</KatexSpan>.
+
+        You can also add add a scalar value to a vector. A scalar just means a single number.
+
+        <KatexBlock>
+        s + \boldsymbol{a} = [s + a_x, s + a_y, s + a_z]
+        </KatexBlock>
+
+        ### Scalar Multiplication
+
+        To multiply a vector with a scalar, it's the same for adding a scalar. The scalar value is multiplied across
+        all components.
+
+        <KatexBlock>
+            s\boldsymbol{a} = [s \cdot a_x, s \cdot a_y, s \cdot a_z]
+        </KatexBlock>
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/math/scalar-mul'
+        @figureId='2'
+        @figureCaption={{concat
+            "Multiplying a vector by a scalar stretches or scales the vector along it's direction."
+            "It's length gets longer. Using a negative number inverts the vector. "
+            "If the scalar value was a fraction, it's scalar division."
+        }}
+    />
+    <ProseMarkdown>
+        ### Dot Product
+
+        Multiplying a vector by a vector comes in 2 forms. The **dot product** is one that produces a scalar value.
+        Given two vectors, <KatexSpan>\boldsymbol{a}=[a_x,a_y,a_z]</KatexSpan> and <KatexSpan>\boldsymbol{b}=[b_x, b_y, b_z]</KatexSpan>.
+
+        The dot product is defined below:
+
+        <KatexBlock>
+            \boldsymbol{a} \cdotp \boldsymbol{b} = a_x \cdot b_x + a_y \cdot b_y + a_z \cdot b_z
+        </KatexBlock>
+
+        The components are multiplied together and summed.
+
+        Play around with changing the direction for each of the vectors and see if you can figure out the
+        relationship between the dot product and the angles of the vectors.
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/math/dot-product'
+        @figureId='3'
+        @figureCaption='Visualizing dot products. The values range from 1 to -1. In this figure, white represents 1 and black represents -1.'
+    />
+    <ProseMarkdown>
+        It might not be clear from the demo, but the value of the **dot product** seem to range between -1 and 1. They're
+        capped at 1 due to the vectors being **unit vectors**. You'll notice that when the vectors are facing the same direction, the value
+        is 1 and when they're perpendicular, it's 0. Written another way, the **dot product** is expressed as the cosine of
+        the angle between two vectors.
+
+        <KatexBlock>
+        \boldsymbol{a} \cdotp \boldsymbol{b} = \lVert a \rVert \lVert b \rVert \cos \theta
+        </KatexBlock>
+
+        In the above expression, the length of <KatexSpan>\boldsymbol{a}</KatexSpan> is multiplied by the length of <KatexSpan>\boldsymbol{b}</KatexSpan>.
+        The product is then scaled by the cosine factor. For **unit vectors**, <KatexSpan>\lVert a \rVert \cdot \lVert b \rVert</KatexSpan>
+        is just 1 so the **dot product** is simplified to just <KatexSpan>\cos \theta</KatexSpan>.
+
+
+        To get a better intuition of dot products without having to do mental gymnastics, I think of it as angle
+        sensor.
+        It returns **-1** when the angles are <KatexSpan>180 \degree</KatexSpan>, and 1 when they're aligned. When you plot a **cosine** function, you see
+        a sinusoidal waveform. Both <KatexSpan>\sin</KatexSpan> and <KatexSpan>\cos</KatexSpan> create the same wave but they're offset by <KatexSpan>90 \degree</KatexSpan>.
+        A **cosine** would begin at 1 at <KatexSpan>0 \degree</KatexSpan> and transition to 0 at <KatexSpan>90 \degree</KatexSpan> while a **sine** would start at 0
+        and transition to 1 at <KatexSpan>90 \degree</KatexSpan>.
+    </ProseMarkdown>
+    <ProseFigure
+        @figureId='4'
+        @figureCaption='cos (blue) is 1 at 0 deg and sin (red) is 1 at 90 deg'
+        @imageUrl='/figures/sincos.png'
+        @vertical={{true}}
+    />
+    <ProseMarkdown>
+        **Dot products** are most commonly used as a scale factor. That is, scaling a term by a certain amount so that it's
+        maximum is achieved when the vectors are aligned. A light source's attenution on a surface depends on the angle between
+        the light direction and the **surface normal**. Light is most bright when the normal is aligned to the light
+        direction.
+
+        Another way **dot products** are used is to find the angle between two vectors. Since the cosine is an angle based
+        function, taking the inverse, a.k.a <KatexSpan>\arccos</KatexSpan>, gives you the angle. Although you should be careful as multiple angles
+        can give you the same result. Rotating a vector by <KatexSpan>90 \degree</KatexSpan> counter-clockwise can be achieved by rotating it <KatexSpan>-270 \degree</KatexSpan>.
+        The dot product gives you the smaller of the two.
+
+        ### Cross Product
+
+        The other product form, called a **cross product**, produces a vector as a result. **Cross products** are slightly less
+        intuitive and is defined as as follows:
+
+        <KatexBlock>
+            \boldsymbol{a} \times \boldsymbol{b} = [a_y \cdot b_z - a_z \cdot b_y, a_z \cdot b_x - a_x \cdot b_z, a_x \cdot b_y - a_y \cdot b_x]
+        </KatexBlock>
+
+        Just like the **dot product** has the <KatexSpan>\cos</KatexSpan> form, the **cross product** has a similar form.
+
+        <KatexBlock>
+            \boldsymbol{a} \times \boldsymbol{b} = \lVert A \rVert \lVert B \rVert \sin \theta
+        </KatexBlock>
+
+        For **unit vectors**, the magnitude of the product soley rely on the angle between the vectors. This time,
+        the relationship is a **sine** function. The magnitude is maximized when the angle is <KatexSpan>90 \degree</KatexSpan>, basically when the
+        vectors are perpendicular to each other.
+
+        The result is another vector. The direction of this vector is perpendicular to both vectors <KatexSpan>\boldsymbol{a}</KatexSpan> and <KatexSpan>\boldsymbol{b}</KatexSpan>. Using
+        **cross products**, you can calculate the direction of the <KatexSpan>\hat{z}</KatexSpan> basis vector with only <KatexSpan>\hat{x}</KatexSpan> and <KatexSpan>\hat{y}</KatexSpan>. It's commonly used
+        to figure out the third axis that would be perpendicular to both input axes.
+
+        Enough words. Let's see cross products in action.
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/math/cross-product'
+        @figureId='5'
+        @figureCaption='Cross products in action. Like the dot product, the color of the sweeping angle represents the magnitude of the result, only this time the output is a vector.' />
+    <ProseMarkdown>
+        As far as other usages go, it can be used to derive angles between vectors. Its used to calculate the amount of
+        force on a wrench. The angle at which you hold the wrench will determine how much force is applied to the it.
+        Pushing down perpendicular to the wrench will apply the most force. This relationship is represented with the
+        **sine** function.
+
+        ## 2D Transformations
+
+        A transformation is any operation that take as input vertices and converts them in some way, like moving,
+        reshaping, or rotating them.
+
+        ### Translation
+
+        Translations are done by adding vectors. Translation is a fancy way of saying move without changing the shape.
+
+        <KatexBlock>
+        \boldsymbol{a} + \boldsymbol{t}  = [a_x + t_x, a_y + t_y, a_z + t_z]
+        </KatexBlock>
+
+        ### Scaling
+
+        Scaling transforms can stretch an object. It can stretch it uniformally in all directions or non-uniformally.
+        Multiplying a point by unequal amounts across each component will result in a non-uniform scale.
+
+        <KatexBlock>
+        \boldsymbol{s} \cdot \boldsymbol{a} = [a_x \cdot s_x, a_y \cdot s_y, a.z \cdot s_z]
+        </KatexBlock>
+
+        ### Rotation
+
+        While translations and scaling is fairly intuitive without much theory, explaining rotation transforms needs
+        more preparation to make things clear. So far we haven't had to deal with **complex numbers**. That is, numbers that
+        consist of **imaginary numbers**. Learning some **complex** math is essential to intuitively understanding rotation.
+
+        In mathematics, <KatexSpan>\boldsymbol{i}</KatexSpan> is the imaginary number. Whether or not this number actually exist doesn't really matter. It is useful. Just as
+        **infinity** doesn't actually exist but it's useful. Well I guess you can say it exist because it's a useful
+        tool and most constructs in math aren't physically real anyways.
+
+        <KatexSpan>\boldsymbol{i}</KatexSpan> is <KatexSpan>\sqrt{-1}</KatexSpan>.
+
+        Here are some common operations on <KatexSpan>\boldsymbol{i}</KatexSpan>:
+
+        <KatexBlock>
+        \boldsymbol{i^2} = -1\\
+        \boldsymbol{i^3} = -\boldsymbol{i}\\
+        \boldsymbol{i^4} = 1
+        </KatexBlock>
+
+        A **complex number** is one that combines a **real** part, and an **imaginary** part <KatexSpan>a + b\boldsymbol{i}</KatexSpan>. Here's some common operations
+        on **complex numbers**:
+
+        <KatexBlock>
+        (a + b\boldsymbol{i}) + (c + d\boldsymbol{i}) = (a + c) + (b + d)\boldsymbol{i}\\
+        (a + b\boldsymbol{i})(c + d\boldsymbol{i}) = a \cdot c + a \cdot d\boldsymbol{i} + c \cdot b\boldsymbol{i} + b\boldsymbol{i} \cdot d\boldsymbol{i} = ac - bd + (ad + cb)\boldsymbol{i}
+        </KatexBlock>
+
+        Adding **complex numbers** is done component-wise. Add the **reals** together then add the **imaginaries** together. Multiplying them involves the basic
+        **FOIL** method (first terms + outer terms + inner terms + last terms).
+
+        When a **complex number** is multiplied or added with it's conjugate, the result is a real number.
+
+        <KatexBlock>
+        (a + b\boldsymbol{i}) \cdot (a - b\boldsymbol{i}) = (a^2 + abi - abi + -b^2i^2) = (a^2 + b^2)\\
+        (a + b\boldsymbol{i}) + (a - b\boldsymbol{i}) = a
+        </KatexBlock>
+
+        **Complex numbers** are important to the field of mathematics because it allows us to express numbers in different
+        dimensions. All numbers, outside of **imaginary numbers** are **real numbers**. They fall on the **real** number line.
+
+        Up to now we've expressed vectors as an ordered pair of numbers, and we assume which axis they belong to. More
+        formally, vectors can be expressed as **complex numbers**. <KatexSpan>(p_x, p_y)</KatexSpan> can be written as <KatexSpan>p_x + p_y\boldsymbol{i}</KatexSpan> where
+        <KatexSpan>p_x</KatexSpan> lies on the **real** axis and <KatexSpan>p_y</KatexSpan> lies on the **imaginary** axis.
+        Together they form the **complex plane**.
+
+        Rotations in **2D** space, on this **complex plane** to be precise, are carried out as **complex** multiplications.
+        Multiplying by <KatexSpan>\boldsymbol{i}</KatexSpan> will rotate a point on this plane by <KatexSpan>90 \degree</KatexSpan> counter-clockwise. Do it 3 more times and you
+        end up right back where you started, a full <KatexSpan>360 \degree</KatexSpan> rotation.
+
+        Lets expand this.
+
+        For a point <KatexSpan>\boldsymbol{P} = (1, 0)</KatexSpan>
+
+        <KatexBlock>
+            1 + 0\boldsymbol{i}
+        </KatexBlock>
+
+        Rotating by <KatexSpan>\boldsymbol{i}</KatexSpan> results in <KatexSpan>(0, 1)</KatexSpan>.
+
+        <KatexBlock>
+            (1 + 0\boldsymbol{i})\boldsymbol{i} = \boldsymbol{i}
+        </KatexBlock>
+
+        <KatexSpan>(0, 1)</KatexSpan> is a <KatexSpan>90 \degree</KatexSpan> rotation. Do it 3 more times.
+
+        <KatexBlock>
+            (0 + 1\boldsymbol{i})\boldsymbol{i} = -1 \\
+            (-1 + 0\boldsymbol{i})\boldsymbol{i} = -\boldsymbol{i}\\
+            (0, -1\boldsymbol{i})\boldsymbol{i} = 1
+        </KatexBlock>
+
+        <KatexSpan>\boldsymbol{i}^2</KatexSpan> is <KatexSpan>-1</KatexSpan> and <KatexSpan>-(-1)</KatexSpan> is <KatexSpan>1</KatexSpan>.
+
+        Let's try another example. For a point <KatexSpan>\boldsymbol{P} = (1, 0)</KatexSpan>, rotate it by <KatexSpan>45 \degree</KatexSpan>.
+
+        If you remember your **unit circle** from **Trigonometry**, <KatexSpan>45 \degree</KatexSpan> can be written as <KatexSpan>({\sqrt{2} \over 2},{\sqrt{2} \over 2})</KatexSpan>. Simply
+        multiply that point by <KatexSpan>({\sqrt{2} \over 2} + {\sqrt{2} \over 2}\boldsymbol{i})</KatexSpan>.
+
+        <KatexBlock>
+        (1 + 0\boldsymbol{i}) \times ({\sqrt{2} \over 2}, {\sqrt{2} \over 2}\boldsymbol{i}) = ({\sqrt{2} \over 2} + {\sqrt{2} \over2}\boldsymbol{i})
+        </KatexBlock>
+
+        More generally, rotating any point in 2D space is of the form
+
+        <KatexBlock>
+        \bold{R}(\boldsymbol{v}, \theta) = \boldsymbol{v} \cdot (\cos \theta + \sin \theta \boldsymbol{i}).
+        </KatexBlock>
+
+        When fully expanded it becomes <KatexSpan>p_x \cdot \cos \theta - p_y \sin \theta + (p_x \cdot \sin + p_y \cdot \cos)\boldsymbol{i}</KatexSpan>.
+
+        The **complex number** you multiply by, can be represented as a **unit vector** in **2D** space. Any rotation of a vector (position or directional) in **2D** space can be
+        performed by simply multiplying that vector by another vector. This transform vector is defined as <KatexSpan>(\cos \theta + \sin \theta \boldsymbol{i})</KatexSpan>.
+        This can also be neatly expressed in polar form <KatexSpan>r\boldsymbol{e}^{\boldsymbol{i}\theta}</KatexSpan>.
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/math/rotation-2d'
+        @figureId='6'
+        @figureCaption='Multiplying a vector with a directional vector in polar form'
+    />
+    <ProseMarkdown>
+        ## Chaining Transformations
+
+        It's normal to apply multiple transformations in succession. The usual routine is to scale first, followed
+        by rotation, then translation. This is not some standard, just a reasonable convention a lot of APIs use.
+        That order matches people's expectation but it's not required. You can chain transformations in any order.
+        All transforms operate within the original coordinate space of the object being tansformed. This means that transformations
+        are carried out in the coordinate space the object was defined in. If the object for instance is a simple triangle,
+        then the coordinate space would typically be found at the center of this triangle.
+
+        If this triangle started out centered at the origin and was then translated by <KatexSpan>\bold{T} = (5, 0)</KatexSpan>, the
+        then the triangle's center position is moved by 5 units in the **X-axis**  but the coordinate system is still
+        centered at <KatexSpan>(0, 0)</KatexSpan>. If you follow it up with a <KatexSpan>90 \degree</KatexSpan>rotation,
+        then this would place the new point at 5 units up on the **Y-axis**.
+
+        This ordering can be changed by multiplying out transformations in a different order. Play with the example below to see where
+        the object will end up using the same transformations but across different orders.
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/math/chaining'
+        @figureId='7'
+        @figureCaption='Visualize different ordering of transformations'
+    />
+    <ProseMarkdown>
+        ## 3D Transformations and Matrices
+
+        Matrices are the cornerstone of transformations. They can neatly pack multiple transformation in one matrix.
+        They're fast, especially on massively parallel architectures like GPUs. Most importantly, we can use them
+        to rotate in **3D**.
+
+        First, a brief intro on matrices. Matrices are really just a group of numbers. Vectors are groups of numbers
+        as well. Vectors can be represented with matrices but a matrix can have multiple rows or columns. A **2 x 2** matrix
+        has 2 rows and 2 columns. It's commonly implemented as a multi-dimensional array.
+
+        Just like with vectors, let's go over some basic matrix operations.
+
+        ### Addition:
+
+        <KatexBlock>
+        \begin{bmatrix}a_{11} & a_{12} \\ a_{21} & a_{22}\end{bmatrix} + \begin{bmatrix}b_{11} & b_{12} \\ b_{21} & b_{22}\end{bmatrix} = \begin{bmatrix}a_{11}+b_{11} & a_{12}+b_{12} \\ a_{21}+b_{21} & a_{22}+b_{22}\end{bmatrix}
+        </KatexBlock>
+
+        ### Scalar multiplication:
+
+        <KatexBlock>
+        s \cdot \begin{bmatrix}a_{11} & a_{12} \\ a_{21} & a_{22}\end{bmatrix} = \begin{bmatrix}s \cdot a_{11} & s \cdot a_{12} \\ s \cdot a_{21} & s \cdot a_{22}\end{bmatrix}
+        </KatexBlock>
+
+        ### Matrix multiplication:
+
+        For the matrix <KatexSpan>\bold{A}</KatexSpan> and <KatexSpan>\bold{B}</KatexSpan>, given that the sizes are compatible as shown below
+
+        <KatexBlock>
+        \boldsymbol{size}(\bold{A}) = m \times n\\
+        \boldsymbol{size}(\bold{B}) = n \times p
+        </KatexBlock>
+
+
+        matrix multiplication is defined as follows:
+
+        <KatexBlock>
+            \bold{A} \times \bold{B} =
+        \begin{bmatrix}
+        a_{11} \cdot b_{11} + a_{12} \cdot b_{21} & a_{11} \cdot b_{12} + a_{12} \cdot b_{22}\\
+        a_{21} \cdot b_{11} + a_{22} \cdot b_{21} & a_{21} \cdot b_{12} + a_{22} \cdot b_{22}
+        \end{bmatrix}
+        </KatexBlock>
+
+        Matrix multiplication is only possible when the number of columns for **A** matches the number of rows for **B**,
+        meaning <KatexSpan>n</KatexSpan> has to be the same. So, matrices where the sizes are <KatexSpan>m \times n</KatexSpan> and <KatexSpan>n \times p</KatexSpan> will work.
+        The resulting matrix would be a <KatexSpan>m \times p</KatexSpan> matrix.
+
+        Here's another way of looking at it. For the output matrix, which we'll call <KatexSpan>\bold{C}</KatexSpan>, every element can be solved by taking the
+        the **dot product** of the <KatexSpan>ith</KatexSpan> row of **A** with the <KatexSpan>jth</KatexSpan> column of **B**.
+
+        <KatexBlock>
+            C_{ij} = \boldsymbol{a}_i \cdot \boldsymbol{b}_{,j}\\
+            \\
+            \bold{A} \times \bold{B} =
+            \begin{bmatrix}
+            \boldsymbol{a}_1 \cdotp \boldsymbol{b}_{,1} & \boldsymbol{a}_1 \cdotp \boldsymbol{b}_{,2}\\
+            \boldsymbol{a}_2 \cdotp \boldsymbol{b}_{,1} & \boldsymbol{a}_2 \cdotp \boldsymbol{b}_{,2}
+            \end{bmatrix}
+        </KatexBlock>
+
+        Let me explain the the subscript notation used here. To access all the elements in a single row or column
+        I just use a single subscript. To address all elements for the <KatexSpan>ith</KatexSpan> row, I will use <KatexSpan>\boldsymbol{a}_{i}</KatexSpan>.
+
+        I use a comma in place of the row index to represent all rows. For example, to address the <KatexSpan>jth</KatexSpan> column
+        I denote that with <KatexSpan>\boldsymbol{a}_{,j}</KatexSpan>.
+
+        Hopefully this visual model helps a lot more then the purely mathematical definition.
+
+        <KatexBlock>
+            \begin{bmatrix}
+            \color{red}a_{11} & \color{red}a_{12}\\
+            a_{21} & a_{22}
+            \end{bmatrix}
+
+            \times
+
+            \begin{bmatrix}
+            \color{red}b_{11} & b_{12}\\
+            \color{red}b_{21} & b_{22}
+            \end{bmatrix}
+
+            =
+
+            \begin{bmatrix}
+            \color{red}c_{11} & c_{12}\\
+            c_{21} & c_{22}
+            \end{bmatrix}
+
+        </KatexBlock>
+        <figure>
+            <figcaption>I highlighted the red to show which vectors were involved in the products. For <KatexSpan>c_{11}</KatexSpan> we
+            just needed to take the dot product of the <KatexSpan>1st</KatexSpan> row with the <KatexSpan>1st</KatexSpan> column.</figcaption>
+        </figure>
+
+        Each row and column can be viewed as vectors. Matrix multiplication is a matter of finding the correct vectors
+        to use for the inner product.
+
+        If matrix multiplication is new to you, this could take a lot more practice to get the hang of it.
+        If there is anything to get out of this is that the inner dimensions has to match. As we've seen,
+        a <KatexSpan>2 \times 2</KatexSpan> matrix can be multiplied by a <KatexSpan>2 \times 2</KatexSpan> and a
+        <KatexSpan>3 \times 3</KatexSpan> by a <KatexSpan>3 \times 3</KatexSpan>. A <KatexSpan>3 \times 3</KatexSpan>
+        cannot be multiplied by <KatexSpan>1 \times 3</KatexSpan> but a <KatexSpan>1 \times 3</KatexSpan>
+        can be multiplied by a <KatexSpan>3 \times 3</KatexSpan>. The order is important. Even for a
+        <KatexSpan>3 \times 3</KatexSpan>, swapping the order would result in different results.
+
+
+        ### Column-Major Vector
+
+        In the math world and OpenGL, vectors take on the **column-major** form.
+        Because of this choice, vectors being transformed by a matrix always needs to be to the right of the matrix.
+
+        Let <KatexSpan>\bold{A}</KatexSpan> be a <KatexSpan>3 \times 3</KatexSpan> matrix and <KatexSpan>\bold{P}</KatexSpan> be a <KatexSpan>3 \times 1 </KatexSpan> column vector.
+        The only possible order to multiply these togther is <KatexSpan>\bold{A} \times \bold{P}</KatexSpan>. It can never
+        be <KatexSpan>\bold{P} \times \bold{A}</KatexSpan>. Lets add another matrix <KatexSpan>\bold{B}</KatexSpan>, to the mix. It's a <KatexSpan>3 \times 3</KatexSpan> matrix.
+        You can have <KatexSpan>\bold{A} \times \bold{B} \times \bold{P}</KatexSpan> or <KatexSpan>\bold{B} \times \bold{A} \times \bold{P}</KatexSpan>
+        but never <KatexSpan>\bold{A} \times \bold{P} \times \bold{B}</KatexSpan> or <KatexSpan>\bold{B} \times \bold{P} \times \bold{A}</KatexSpan>.
+
+        Due to the non-commutative property of matrices, matrices are order dependent. You can't actually swap the the order,
+        but you can change when they're evaluated.
+
+        You can evaluate <KatexSpan>\bold{A} \times \bold{B} \times \bold{P}</KatexSpan> like <KatexSpan>(\bold{A} \times \bold{B}) \times \bold{P}</KatexSpan>
+        or <KatexSpan>\bold{A} \times (\bold{B} \times \bold{P})</KatexSpan>. This is a property of matrix multiplication called
+        associativity.
+
+        If <KatexSpan>\bold{T}</KatexSpan>, <KatexSpan>\bold{R}</KatexSpan>, <KatexSpan>\bold{S}</KatexSpan> were transformations, then you can evaluate this
+        multiplication <KatexSpan>\bold{TRS}\boldsymbol{p}</KatexSpan> in the following order. <KatexSpan>\bold{S} \times \boldsymbol{p}</KatexSpan> followed by
+        a multiplication by <KatexSpan>\bold{R}</KatexSpan>, then by <KatexSpan>\bold{T}</KatexSpan>. You can also evaluate <KatexSpan>\bold{TRS}</KatexSpan>
+        together to create one combined matrix.
+
+        A significant number of people would say you'd have to evaluate the multiplication by reading right to left. While techically,
+        that's true, I have to make it clear that you can evaluate in whatever order. You just can't rearrange them.
+
+        One of the reasons a majority of people get this wrong is that this evaluation order gives you a more intuitive
+        interpretation of how transformations are applied.
+
+        Take <KatexSpan>\bold{TRS}\boldsymbol{p}</KatexSpan> for example, <KatexSpan>\bold{T}</KatexSpan> is translation matrix, <KatexSpan>\bold{R}</KatexSpan>
+        a rotation, <KatexSpan>\bold{S}</KatexSpan> a scaling matrix and the <KatexSpan>\boldsymbol{p}</KatexSpan> is the point being
+        transformed. It's natural to think of scaling <KatexSpan>\boldsymbol{p}</KatexSpan> by <KatexSpan>\bold{S}</KatexSpan> first, then rotating this scaled point, followed by
+        a rotation and translation.
+
+        You can just as easily evaluate left to right. Instead of looking at it from a perspective of transforming
+        the point, it's actually transforming the coordinate system. Before I lose you, here's an example.
+
+        Let <KatexSpan>\bold{T}</KatexSpan> be a translation matrix that moves to the right by 3 units. Let <KatexSpan>\bold{R}</KatexSpan> be a <KatexSpan>90 \degree</KatexSpan> rotation
+        matrix. Let <KatexSpan>\boldsymbol{p} = (1, 0, 0)</KatexSpan>. Let's evaluate <KatexSpan>\bold{TR}\boldsymbol{p}</KatexSpan> left to right and follow what's happening.
+
+        1. Starting at the original coordinate space, everything is centered at <KatexSpan>(0,0,0)</KatexSpan>. This would be the absolute world
+        space.
+        2. <KatexSpan>\bold{T}</KatexSpan> establishes a new coordinate space where <KatexSpan>(0,0,0)</KatexSpan> is now at <KatexSpan>(3,0,0)</KatexSpan>.
+        3. <KatexSpan>\bold{R}</KatexSpan> establishes a new coordinate system where the origin is still at <KatexSpan>(3,0,0)</KatexSpan> but the local right axis is
+        pointing upwards now and the local up is pointing in the <KatexSpan>-X</KatexSpan> direction.
+        4. <KatexSpan>\bold{P}</KatexSpan> is drawn at <KatexSpan>(1,0,0)</KatexSpan> of this coordinate system but <KatexSpan>(1,0,0)</KatexSpan> is actually pointing up now.
+        The absolute coordinates for this point would be <KatexSpan>(3,1,0)</KatexSpan>.
+
+        Lets evaluate it from the reverse direction. Remember, we have to look at this from the perspective of the point being transformed.
+
+        1. Starting in absolute coordinate space.
+        2. <KatexSpan>\bold{P}</KatexSpan> is drawn at <KatexSpan>(1,0,0)</KatexSpan>.
+        3. <KatexSpan>\bold{P}</KatexSpan> is rotated by <KatexSpan>\bold{R}</KatexSpan> and becomes <KatexSpan>(0,1,0)</KatexSpan>.
+        4. <KatexSpan>\bold{P}</KatexSpan> is then translated 3 units to the right and becomes <KatexSpan>(3,1,0)</KatexSpan>.
+
+        Evaluating it from right to left seems easier to visualize for most people which is why many people believe
+        it's the only way to evaluate when using **column-major** vectors.
+
+        Since we're on the theme of correcting misinformation, this right-to-left evaluation has nothing to do with
+        being **right-handed**. Nor does it have anything to do with column-major ordering, which is an implementation
+        detail on how to store the values of matrix in memory.
+
+        Here's a visual example of this mental gymnastics.
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/math/transform-intuition'
+        @figureId='8'
+        @figureCaption='Left-to-right evaluation. Coordinate systems are being transformed. The X-axis now becomes the Y-axis in the first transform. The next transform positions the new coordinate system 3 units to the left of the original. The point P is drawn 3 units on the X-axis, which is facing up.'
+        @props={{hash mode='left-to-right'}}
+    />
+    <ProseFigure
+        @componentName='figures/math/transform-intuition'
+        @figureId='9'
+        @figureCaption='Right-to-left evalution'
+        @props={{hash mode='right-to-left'}}
+    />
+    <ProseMarkdown>
+        Thinking in terms of left-to-right can be helpful as well. It can be visualized like **Fig. 8**. Computationally, this is what is really going on under the hood.
+        Transforms are being applied to the coordinate system rather then the object. Each transformation reveals a new coordinate system with
+        a new origin.
+
+        ### Scale Matrix
+
+        <KatexBlock>
+        \bold{S} =
+        \begin{bmatrix}
+            s_x & 0 & 0\\
+            0 & s_y & 0\\
+            0 & 0 & s_z\\
+        \end{bmatrix}
+        </KatexBlock>
+        <KatexBlock>
+        \boldsymbol{p} = [p_x, p_y, p_z]^T
+        </KatexBlock>
+
+        When you multiply <KatexSpan>\bold{S}</KatexSpan> with <KatexSpan>\boldsymbol{p}</KatexSpan>, you get a <KatexSpan>1 \times 3</KatexSpan>
+        since <KatexSpan>size(\bold{S}) = 3 \times 3</KatexSpan>, and <KatexSpan>size(\boldsymbol{p}) = 3 \times 1</KatexSpan>. All <KatexSpan>3 \times 3</KatexSpan> matrices
+        multiplied by a **3D** point will give a <KatexSpan>3 \times 1</KatexSpan>.
+
+        <KatexBlock>
+        \bold{S} \times \boldsymbol{p} =
+
+        \begin{bmatrix}
+            s_x & 0 & 0\\
+            0 & s_y & 0\\
+            0 & 0 & s_z\\
+        \end{bmatrix}
+
+        \times
+
+        \begin{bmatrix}
+            p_x\\
+            p_y\\
+            p_z\\
+        \end{bmatrix}
+
+        =
+
+        \begin{bmatrix}
+            s_x \cdot p_x\\
+            s_y \cdot p_y\\
+            s_z \cdot p_z\\
+        \end{bmatrix}
+        </KatexBlock>
+
+        ### Translation Matrix
+
+        Translating 3D vectors with matrices require a <KatexSpan>4 \times 4</KatexSpan> matrix.
+        Since a <KatexSpan>4 \times 4</KatexSpan> matrix cannot be multiplied by a <KatexSpan>3 \times 1</KatexSpan> vector,
+        we have to augment our vectors to be 4 dimensions.
+        Add an additional component and give it a value of 1. <KatexSpan>[p_x, p_y, p_z, p_w]</KatexSpan>. These are called homogenous coordinates. To
+        use vectors against a <KatexSpan>4 \times 4</KatexSpan> matrix, you must use a **4-component** vector. Set this to 1 for positional vertices
+        and 0 for directional ones. We'll see shortly why 1 is used for positional vectors, and also why 0 is used for directional vectors.
+
+        <KatexBlock>
+        \bold{T} \times \boldsymbol{p} =
+        \begin{bmatrix}
+            1 & 0 & 0 & t_x\\
+            0 & 1 & 0 & t_y\\
+            0 & 0 & 1 & t_z\\
+            0 & 0 & 0 & 1
+        \end{bmatrix}
+
+        \times
+
+        \begin{bmatrix}
+            p_x\\
+            p_y\\
+            p_z\\
+            p_w\\
+        \end{bmatrix}
+
+        =
+
+        \begin{bmatrix}
+            p_x + t_x \cdot p_w\\
+            p_y + t_y \cdot p_w\\
+            p_z + t_z \cdot p_w\\
+            p_w\\
+        \end{bmatrix}
+        </KatexBlock>
+
+        As you can see, the resulting vector is the original vector plus the translation when <KatexSpan>p_w</KatexSpan> is 1. Directional
+        vectors are always assumed to be attached to the origin because they have no positional concept. They express directions and thus shouldn't
+        be modified by a translation matrix. When you set <KatexSpan>p_w</KatexSpan> to 0, the vector doesn't get transformed.
+
+        ### Rotation Matrix
+
+        A 3D rotation matrix requires a little more explaining. Recall that a 2D rotation transform is the complex number
+        <KatexSpan>\cos \theta + \sin \theta \hat{\boldsymbol{i}}</KatexSpan> or the vector <KatexSpan>[\cos \theta, \sin \theta]</KatexSpan>.
+        Setting up a **2D** rotation matrix for this is not as straightforward but I'll walk through it.
+
+        <KatexBlock>
+        \bold{R} \times \boldsymbol{p} =
+        \begin{bmatrix}
+            \cos \theta & -\sin \theta \\
+            \sin \theta & \cos \theta \\
+        \end{bmatrix}
+
+        \times
+
+        \begin{bmatrix}
+            p_x\\
+            p_y\\
+        \end{bmatrix}
+
+        =
+
+        \begin{bmatrix}
+            p_x \cos \theta - p_y \sin \theta\\
+            p_x \sin \theta + p_y \cos \theta\\
+        \end{bmatrix}
+        </KatexBlock>
+
+        Recall that the fully expanded vector based rotation is <KatexSpan>[p_x \cos \theta - p_y \sin \theta, p_x \sin \theta + p_y \cos \theta]</KatexSpan>.
+        Focusing on just the **x** component, let's build this matrix piece by piece.
+
+        <KatexBlock>
+        \begin{bmatrix}
+            \cos \theta & -\sin \theta\\
+            0 & 0\\
+        \end{bmatrix}
+
+        \times
+
+        \begin{bmatrix}
+            p_x\\
+            p_y\\
+        \end{bmatrix}
+
+        =
+
+        \begin{bmatrix}
+            p_x \cdot \cos \theta - p_y \cdot \sin \theta\\
+            0
+        \end{bmatrix}
+        </KatexBlock>
+
+        The matrix transforms only the <KatexSpan>p_x</KatexSpan> component. If you compare this with the **complex version**, you'd notice they match up.
+        We can do the same operation with the **y** component.
+
+        <KatexBlock>
+        \begin{bmatrix}
+            0 & 0\\
+            \sin \theta & \cos \theta\\
+        \end{bmatrix}
+
+        \times
+
+        \begin{bmatrix}
+            p_x\\
+            p_y\\
+        \end{bmatrix}
+
+        =
+
+        \begin{bmatrix}
+            0\\
+            p_x \cdot \sin \theta + p_y \cdot \cos \theta
+        \end{bmatrix}
+        </KatexBlock>
+
+        Integrating the two gives you the full **2D** rotation matrix.
+
+        Another visual aid for constructing this matrix is to imagine each column of the rotation matrix establishing
+        the new basis vectors for the rotation. Earlier, I said you can think of matrices as creating a new
+        coordinate system. The coordinate system's orientation and position in space is determined by these basis
+        vectors. Any point in this space can be determined as a linear combination of these vectors.
+
+        Knowing this we can write all transformations, at least of the <KatexSpan>2 \times 2</KatexSpan> and <KatexSpan>3 \times 3</KatexSpan> variety like this.
+
+        <KatexBlock>
+        \begin{bmatrix}
+        i_x & j_x & k_x\\
+        i_y & j_y & k_y\\
+        i_z & j_z & k_z\\
+        \end{bmatrix}
+        </KatexBlock>
+
+        <KatexSpan>\hat{i} \space \hat{j} \space \hat{k}</KatexSpan> vectors are commonly used as basis vectors.
+
+        For a <KatexSpan>90 \degree</KatexSpan> 2D rotation, this matrix looks like this:
+
+        <KatexBlock>
+        \begin{bmatrix}
+            0 & -1\\
+            1 & 0\\
+        \end{bmatrix}
+        </KatexBlock>
+
+        Let's check our answer against the general form and see if they match
+
+        <KatexBlock>
+        \begin{bmatrix}
+        cos 90 \degree & -sin 90 \degree\\
+        sin 90 \degree & cos 90 \degree\\
+        \end{bmatrix}
+
+        =
+
+        \begin{bmatrix}
+            0 & -1\\
+            1 & 0\\
+        \end{bmatrix}
+        </KatexBlock>
+
+        This looks correct. This is a powerful way of constructing transformations and we can use this to help us construct **3D** rotations easier.
+
+        Let's extend this to **3D**. In **2D**, rotation is only done about one axis, an imaginary axis not on the complex plane.
+        In **3D**, you can rotate about any of the 3 axes **x**, **y**, or **z**. Rotation in **2D** is still possible in **3D**. In fact,
+        it's generally easier to think of rotation in **3D** as a set of rotations about any of the 3 axes. Rotation around any one axis
+        is a **2D** rotation. For example, a normal **2D** rotation can be seen as a rotation about the **z** axis. Let's defined that matrix.
+
+        <KatexBlock>
+        \bold{R} \times \boldsymbol{p} =
+
+        \begin{bmatrix}
+            \cos \theta & -\sin \theta & 0\\
+            \sin \theta & \cos \theta & 0\\
+            0 & 0 & 1\\
+        \end{bmatrix}
+
+        \times
+
+        \begin{bmatrix}
+            p_x\\
+            p_y\\
+            p_z\\
+        \end{bmatrix}
+
+        =
+
+        \begin{bmatrix}
+            p_x \cdot \cos \theta - p_y \cdot \sin \theta\\
+            p_x \cdot \sin \theta + p_y \cdot \cos \theta\\
+            p_z\\
+        \end{bmatrix}
+        </KatexBlock>
+
+        Notice the transformed vertex is the same as the **2D** example.
+
+        The third row and column is 1 and has the effect of keeping the current value of <KatexSpan>p_z</KatexSpan>. There's a special matrix,
+        that when multiplied by it, will always return the original matrix. This is called an identity matrix. It's an
+        almost empty matrix with the diagonals filled with 1. I hope that by now, there's some kind of intuition forming about the 1 and 0
+        picking specific parts of the vector to keep. Just like we saw in the **3D** rotation about **z**. Let's formally introduce the identity matrix.
+
+        <KatexBlock>
+        \bold{I} =
+
+        \begin{bmatrix}
+            1 & 0 & 0\\
+            0 & 1 & 0\\
+            0 & 0 & 1\\
+        \end{bmatrix}
+        \\
+        \bold{I} \times \boldsymbol{p} = \boldsymbol{p}
+        </KatexBlock>
+
+        When evaluating the <KatexSpan>p_x</KatexSpan> component of the transformed point, the first row <KatexSpan>[1,0,0]</KatexSpan> will be multiplied out,
+        keeping only the <KatexSpan>p_x</KatexSpan> component and scaling it by 1. For <KatexSpan>p_y</KatexSpan>, the second row <KatexSpan>[0,1,0]</KatexSpan> will be multiplied
+        and keeps only the <KatexSpan>p_y</KatexSpan>. It's the same story for the <KatexSpan>p_z</KatexSpan>.
+
+        When rotating about any vector **x** **y** or **z**, that axis needs to keep its current value. Rotating about **Z** should
+        keep an object's depth intact and only points along the **XY** plane are transformed.
+
+        Here's the rotation matrices for the rest.
+
+        Rotation about **X**:
+
+        <KatexBlock>
+        \bold{R}_x =
+        \begin{bmatrix}
+        1 & 0 & 0\\
+        0 & \cos \theta & -\sin \theta\\
+        0 & \sin \theta & \cos \theta\\
+        \end{bmatrix}
+        </KatexBlock>
+
+        Rotation about **Y**:
+
+        <KatexBlock>
+        \bold{R}_y =
+        \begin{bmatrix}
+            \cos \theta & 0 & \sin \theta\\
+            0 & 1 & 0\\
+            -\sin \theta & 0 & \cos \theta\\
+        \end{bmatrix}
+        </KatexBlock>
+
+        ### Projection Transformations
+
+        Projection matrices play an important role in **3D**. Both perspective and orthographic are commonly used.
+        Perspective, for photorealism and orthographic for **CAD** or **2D games**.
+
+        Unfortunately, this chapter is already too big and there is a lot left to cover. We'll revisit it in a future
+        chapter so projection can get its own treatment. For now, all you need to know is that perspective projection
+        is what allows us to figure out the **2D** coordinates for **3D** points. I discussed the basic theory in the Photography
+        section.
+
+        ### Concatenation
+
+        One the of best features of matrices is the ability to collapse multiple transformations into a single transformation.
+        Rather than evaluating each matrix one by one, a single matrix can be precomputed which would be equivalent to
+        evaluating each one individually.
+
+        ## More On Rotation
+
+        Rotations in **3D** can be done in 2 ways. We've already discussed one way using independent axes. By combining
+        multiple rotations about different axis, it's gives you 3 degrees of freedom. This approach is called *Euler*
+        (pronounced oiler) transforms. The other method is using **quaternion** (pronounced qua-terni-on) transforms.
+
+        ### Euler Transforms
+
+        With **Euler** transforms, any orientation in **3D** space can be represented with 3 angles, rotations about **X**,**Y**,**Z**.
+        Since these rotations are chained, the order matters. There's no standard order for rotation. One is often chosen to help avoid
+        getting into **gimbal lock**. **Gimbal lock** is a phenomenon that only affects **Euler** transforms. This can be
+        experienced by rotating an axis so that it aligns with another axis. With 2 axes aligned, rotating either
+        would result in the same rotation so this extra axis becomes redundant. Not only is it redundant but you
+        lose an axis to rotate it about independently of the other angles. When gimbal lock occurs, it can become
+        difficult to get out of, especially when it's not certain what rotation resulted in the lock.
+
+        **Gimbal lock** can be a serious problem, but the simplicity of using **Euler** angles makes it the goto method for most.
+        Animators stick with Euler angles since it's easier to express movements.
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/math/gimbal-lock'
+        @figureId='7'
+        @figureCaption='Gimbal lock exercise. Can you get this into gimbal lock.'
+    />
+    <ProseMarkdown>
+        ### Quaternions to the Rescue
+
+        Let's review the other approach, called **quaternions**. **Quaternions** provide a vector-based method for rotation.
+        Using complex numbers, it's not possible to do rotations in **3D**. Simply augmenting complex numbers with an
+        extra dimension doesn't work out. Turns out you need 4 dimensions. **2D** rotations has 1 degree of freedom.
+        In **3D**, we need 3 degrees of freedom. To get 3 degrees of freedom, we need **4D** rotations which is similar to
+        how **2D** rotations give us 1 degree of freedom.
+
+        **Quaternions** provide an efficient way to neatly represent rotation. It doesn't involve matrix operations
+        and has minimal storage requirements. It doesn't suffer from the same issues as **Euler** transforms and
+        is superior when used to smoothly interpolate spherical motion.
+
+        Like with **complex numbers**, **quaternation operations** are identical. Now that were dealing with 3 additional
+        dimensions, new imaginary numbers are introduced. Let's introduce them now.
+
+        <KatexBlock>
+        \boldsymbol i^2 = \boldsymbol j^2 = \boldsymbol k^2 = -1\\
+        \boldsymbol j \boldsymbol k = -\boldsymbol k \boldsymbol j = \boldsymbol i\\
+        \boldsymbol k \boldsymbol i = -\boldsymbol i \boldsymbol k = \boldsymbol j\\
+        \boldsymbol i \boldsymbol j = -\boldsymbol j \boldsymbol i = \boldsymbol k\\
+        </KatexBlock>
+
+        These properties are used to resolve multiplication involving those imaginary numbers. For example, multiply
+        by <KatexSpan>\boldsymbol i</KatexSpan> results in a <KatexSpan>90 \degree</KatexSpan> rotation. Multiplying by
+        <KatexSpan>\boldsymbol i</KatexSpan> again <KatexSpan>\boldsymbol i^2</KatexSpan> it becomes **-1** which lies on the **x-axis** in the
+        **complex plane**. With **quaternions**, multiplying the <KatexSpan>\boldsymbol i</KatexSpan> with <KatexSpan>\boldsymbol j</KatexSpan> will give you
+        <KatexSpan>\boldsymbol k</KatexSpan>. Relating back to the
+        cartesian coordinate system, <KatexSpan>\hat x \times \hat y = \hat z</KatexSpan>. This should look familiar to you. It's the cross product.
+
+        A **quaternion** is of this form:
+
+        <KatexBlock>
+        \boldsymbol q = x \boldsymbol i + y \boldsymbol j + z \boldsymbol k + w
+        </KatexBlock>
+
+        It's common to refer to a **quaternion** as having a **vector** part and a **real** part. It's often written as <KatexSpan>\boldsymbol q = \boldsymbol q_v + q_w</KatexSpan>
+        or <KatexSpan>\boldsymbol q = [\boldsymbol v, w]</KatexSpan>.
+
+        **Quaternion** transformations are kind of weird. It takes the form <KatexSpan>\boldsymbol{qpq}^{-1}</KatexSpan>. You surround the point being transformed
+        with a **unit quaternion** and its **conjugate**. A **quaternion conjugate** is similar to a **complex conjugate** where the **real** is the same but the
+        **imaginary** part is negated.
+
+        A **unit quaternion** takes this form <KatexSpan>\boldsymbol q = [\sin \theta \cdot \boldsymbol v, \cos \theta \cdot w]</KatexSpan> and the conjugate
+        is <KatexSpan>\boldsymbol q = [-\sin \theta \cdot \boldsymbol v, \cos \theta \cdot w]</KatexSpan>.
+
+        Here's my best attempt at explaining **quaternion** transforms in laymens terms. **Unit quaternions** allow you to rotate
+        about an arbitrary axis defined by the vector part <KatexSpan>\sin \theta \cdot (x \boldsymbol i + y \boldsymbol j + z \boldsymbol k)</KatexSpan>.
+        The angle at which it rotates, is defined by the real part <KatexSpan>\cos \theta \cdot w</KatexSpan>. To be more accurate <KatexSpan>\cos \theta \cdot w</KatexSpan>
+        equals the half-angle. Multiplying by <KatexSpan>\boldsymbol q</KatexSpan>, involves a half-angle rotation, and <KatexSpan>\boldsymbol q^{-1}</KatexSpan>
+        doubles that rotation.
+
+        There are whole collections of books devote to **quaternions** alone. It's complex topic. **4D** rotations are hard
+        to visualize and I won't bore you with more details. However, if there is one thing I want you to get out of this then it
+        is to understand that **unit quaternions** allow you to rotate about an abitrary axis. You can use the method above
+        to perform the transform, plugging in the axis and the half-angle and you shouldn't need to know anything else.
+
+        If you're dying to learn more about this, I recommend a series of interactive videos about quaternions from [3Blue1Brown](https://eater.net/quaternions)
+
+        My demos aren't as fancy but I have an example that can show what quaternions are excellent at, slerp.
+    </ProseMarkdown>
+    <ProseFigure
+        @componentName='figures/math/quaternion'
+        @figureId='9'
+        @figureCaption='Quaternion slerp is being performed on the vector inside the red sphere. Linear interpolation is being performed on Euler angles in blue sphere.'
+    />
+</div>

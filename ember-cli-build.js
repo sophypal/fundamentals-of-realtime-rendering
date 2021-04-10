@@ -50,5 +50,9 @@ module.exports = function (defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
+  app.import('node_modules/prismjs/prism.js');
+  app.import('node_modules/prismjs/plugins/autoloader/prism-autoloader.js');
+  app.import('vendor/shims/prism.js');
+
   return app.toTree();
 };

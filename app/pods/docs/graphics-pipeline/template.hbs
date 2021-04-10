@@ -1,0 +1,210 @@
+<div class="relative px-4 sm:px-6 lg:px-8">
+    <Heading @title='The Graphics Pipeline' @subtitle='An extraordinary tale of the life of a pixel'>
+            Knowing how and what happens at each stage of the graphics pipeline helps to ground our understanding of really high-level
+            concepts to the real world. This chapter will shed some light on how each individual pixel gets calculated and displayed
+            on your computer monitor. We'll also delve into some history of GPUs and discuss their architecture in hopes it gives
+            you more clarity on how things really work.
+    </Heading>
+    <ProseMarkdown>
+        ## Pipeline Stages
+
+        Realtime rendering systems take **3D** mesh data and outputs pixels on the screen or a texture. The mesh data is usually brought
+        in from other tools like **Blender** or **Maya**.
+        The graphics pipeline is the list of stages that data goes through to be transformed into pixels for a single frame. Each
+        stage runs in order one by one like an assembly line but each stage is usually a pipeline in itself.
+
+    </ProseMarkdown>
+    <ProseFigure
+        @figureId='1'
+        @figureCaption='The graphics pipeline can be broken down into 5 high-level stages'
+        @imageUrl='/figures/graphics-pipeline.png'
+        @vertical={{true}}
+    />
+    <ProseMarkdown>
+        ## Application Stage
+
+        The application stage consists of task related to preparing geometry to be drawn. This stage is usually done on the CPU
+        and the output is fed to the geometry stage as a list of triangles. Interative graphical applications, like games, need to
+        respond to player input to change what is being rendered. The goal isn't just to render a static scene but to be able to
+        render fast enough for players to comfortabley interact with the scene. Here are some examples of things done in this stage:
+
+        * user input
+        * collision detection
+        * scene culling
+        * animation
+
+        ## Geometry Processing Stage
+
+        The purpose of the geometry stage take vertex input and output geometry primitives. Through this stage, the primitive must
+        be transformed so that the primitive's points and edges can be drawn on the screen.
+        This stage is is fully programmable allowing programmers to build programs on the **GPU**, called **shaders**.
+        These shaders output per-vertex information like points, normals, colors to be fed into the next stage. This stage usually performs these set of tasks:
+
+        * **Model-View-Projection**
+        * **Clipping**
+        * **Screen Mapping**
+
+        ### Model-View-Projection
+
+        **Projection** is the process of flattening out **3D** information onto a **2D** surface. This is usually handled with a simple
+        **projection matrix**. The vertex shader is responsible for outputing the
+        projected coordinates as **homogenous coordinates** <KatexSpan>[p_x, p_y, p_z, p_w]</KatexSpan>, before performing perspective division.
+        This means that the shader program multiplies out the projection, matrix, and view transforms and outputs the results before dividing by
+        the <KatexSpan>p_w</KatexSpan>.
+
+        Let's discuss more in detail what goes on in this calculation.
+
+        #### Local Space
+
+        When a model is created, all it's vertices are defined in local space. Usually, you'll find that all vertices are
+        relative to the center position of the object. To render this object, we need to express the vertices in world
+        coordinates.
+
+        #### World Space
+
+        The model's transforms decribes an object's position and orientation relative to world space. Let's assume we're rendering
+        a box and we want it placed at <KatexSpan>[3, 0, 0]</KatexSpan>. Since vertex shaders are per-vertex operations, let's focus only on one corner
+        <KatexSpan>[0.5, 0.5, 0]</KatexSpan>. That is the box's corner front top corner vertex defined in local space. In order to output the box's corner
+        in it's new position with the box's center position at <KatexSpan>[3, 0, 0]</KatexSpan>, we just multiply by the translation and it becomes <KatexSpan>[3.5, 0.5, 0]</KatexSpan>.
+
+        <KatexBlock>
+        \boldsymbol{p}_{world} = \bold{Model} \cdot \boldsymbol{p}_{local}
+        </KatexBlock>
+
+        #### View Space
+
+        Drawing the corner vertex of box will probably not render anything. We haven't specified where we want our camera. Cameras
+        aren't really a thing in any graphics APIs. The APIs assume you know exactly where to position your objects and the default
+        coordinate space usually range from -1 to 1 on all dimensions with **-Z** pointing into the screen for right handed systems. We
+        typically describe our scene using world coordinates and cameras but this would require we transform these points ourselves.
+
+        In order to draw this point and make it visible, we need to draw it further down the z axis. Let's choose -5, so we'd need
+        to either update the model's mesh by putting a z-offet of -5 or we could store this in the **model matrix**. However,
+        for multiple reasons, it's not a good idea to use the model matrix for this, or even worse, mutate our mesh data everytime
+        the camera changes. If we had several boxes to draw, we'd need to store this offset in all of the boxes model matrices.
+
+        A better idea to store this z-offset in one place. This z-offset is basically our camera. The camera can be used to transform
+        the point into view space, meaning we can render the object relative to where the camera is. For example, a
+        camera position of +5 on Z would do the trick. Notice the inverse relationship here. To view the box 5 units away,
+        you can position the camera +5 on Z or position the box -5 on Z. Similarly, moving the camera to the right can also be represented
+        as the object moving left. The view space can be calculated as the inverse of the camera's transform.
+
+        <KatexBlock>
+        \boldsymbol{p}_{view} = \bold{CameraWorld}^{-1} \cdot \bold{Model} \cdot \boldsymbol{p}_{world}
+        </KatexBlock>
+
+
+        #### Clip Space
+
+        With the point now in **view space**, only one other transformation needs to be applied. The output of the **vertex shader**
+        must be in **clip space**. **Clip space** is a coordinate system where anything lying outside of the range **-w** to **w** will be clipped.
+        Anything outside those ranges, are not in view of the camera's frustum.
+
+        An intuitive way of visualizing this is by taking the shape of the camera's frustum and shrinking all the sides to form a cube.
+        The projection matrix maps a coordinate system, into a unit cube. The extents of this cube is **-w** and **w**. Anything
+        outside this range was not within the frustum's visible volume.
+
+        <KatexBlock>
+        \boldsymbol{p}_{clip} = \bold{Projection} \cdot \bold{CameraWorld}^{-1} \cdot \bold{Model} \cdot \boldsymbol{p}_{world}
+        </KatexBlock>
+
+    </ProseMarkdown>
+    <ProseFigure
+        @figureId='2'
+        @figureCaption='The clipping volume is a cube with width, height, depth of w'
+        @imageUrl='/figures/clipspace.png'
+    />
+    <ProseMarkdown>
+        ### Clipping
+
+        Clipping is a process the **GPU** does to get rid of geometry that is not visible. Triangles are clipped against 4 clipping planes,
+        **left**, **right**, **near**, and **far**. These clipping planes are the sides of a frustum and are usually specified in camera properties
+        for **aspect ratio**, **field of view**, and **near** and **far** clipping distances.
+
+        Primitives that lie outside these planes are clipped. Ones that intersect the planes require reconstruction so that
+        part of it can be visible without being culled entirely.
+
+        It's also during this phase that **perspective division** is performed. The 4-d homogenous coordinate passed in from the shader
+        is divided by <KatexSpan>p_w</KatexSpan>. <KatexSpan>p_w</KatexSpan> is computed with the help with the perspective transform and is
+        <KatexSpan>p_z</KatexSpan>. After perspective division, <KatexSpan>p_w</KatexSpan> is again 1 and can
+        be ignored. It exits this stage as a **3D** vector in **normalized device coordinates**.
+
+        ### Screen Mapping
+
+        **Normalized device coordinates (NDC)**, is a **3D** space with **X**, **Y** pointing right and up respectively. **Z** points away from you, opposite
+        the right-handed system. The values range from -1 to 1 on all axes. During this stage, the space is translated and scaled to match
+        the aspect ratio of the viewport where <KatexSpan>[p_x, p_y]</KatexSpan> will range from 0 to 1. The **Y** axis points down in this
+        coordinate system.
+
+        ## Rasterization Stage
+
+        Rasterization is the process of determining which pixels are inside a triangle. This stage outputs fragments to be shaded by the next
+        stage. I will often refer to pixels as fragments. To be technically accurate, they are not the same. You can have multiple fragments per
+        pixels. Fragments are sample points along a primitive that coincide with a pixel. With MSAA, multiple samples are taken to
+        help reduce jagged edges. In that scenario, you'd have multiple fragments to per pixel.
+
+        ## Pixel Processing Stage
+
+        This stage is responsible for determining the color values for each pixel or fragment. This stage consist of the
+        fragment shader and the output merger stage.
+
+        ### Fragment Shader
+
+        A fragment shader can be as simple as a single instruction which outputs a a sigle color for every fragment, or be more complex
+        and blend multiple textures. This stage is fully programmable just like the vertex shaders. A fragment
+        shader is run for every fragment fed by the rasterizer, which could mean one or more runs per pixel. Not only is it run for each fragment but for each primitive as well. Overlapping primitives
+        will have similar pixel coverage so a shader will be executed for each pixel in that primitive more than once.
+
+        ### Output Merger
+
+        After a color is generated for a pixel, the final color value is calculated and sent to the frame buffer or render target. If a pixel
+        overlaps a pixel already in the buffer, the one with a lower z-value is kept and the other is discarded. This is what happens when the
+        depth buffer write is enabled and depth testing is turned on. The depth buffer stores the previous z-value of that pixel.
+
+        For non-opaque objects, blending can be used to blend the source color with the destination color. Normally, depth testing is turned off
+        for transparent objects so it won't be immediately discarded. Blending is not programmable but highly configurable. You can set different
+        blending equations. The normal blending equation looks like this:
+
+        ```javascript
+        finalColor = source.rgb * source.apha + destination.rgb * (1 - source.alpha)
+        ```
+
+        A fews notes about performance. While it appears that executing shaders for pixels already visited seem like a waste, it's actually required
+        for any blending to occur. Blending itself also adds a performance hit as it needs to read and write to the frame buffer.
+
+        For opaque objects, it's possible to completely eliminate the pixel from being rendered if it didn't pass the depth test. This is called
+        early z depth testing and it requires that the pixel shader not override the z value for the pixel.
+
+        Primitives can be sorted so that when they are rendered, closer objects are drawn first. This helps with performance by rejecting pixels for objects behind.
+
+        This is such a common problem because it isn't easily overcome. Avoiding the issue usually requires adding more constraints to your
+        artistic designs. These classes of problems are commonly called overdrawing.
+
+        ## Post Processing Stage
+
+        It's difficult to achieve some photographic effects like **depth of field**, **motion blur**, and **bloom** to name few. This is just the nature of
+        rasterizers. Each fragment shader is run in the scope of a single pixel from a single primitive. It's not possible to blend across pixels
+        during a fragment shader's execution.
+
+        To achieve these effects, a commonly used technique is to render to a texture in the first pass. In the second pass, the fragment shader
+        can access the colors of the texture and sample any part of that texture to achieve cool effects.
+
+        ## GPUs
+
+        Let's take a brief moment to talk about the workhorse that is making all this possible, the **GPGPU (General Purpose Graphics Processing Unit)**.
+        Before we had **GPGPUs**, and even before **GPUs**, and even before **3D accelerator cards**, everything was done on the **CPU**. Special fixed hardware
+        existed in the commercial space but were expensive and they were optimized for **2D** rendering.
+
+        In 1996, **3dfx** came out with the **Voodoo** card and was the first **3D** accelerator cards in the market. In the year 2000, **nVidia** came out with the
+        first **GPU**, which contained built in a **fixed-function pipeline** for doing **transform and lighting** (the precursor to vertex and pixel shaders). It wasn't
+        until **nVidia** released the first general purpose **GPU**, the **GeForce 3**, that a fully-programmable pipeline was available. **GeForce** released **CUDA** along
+        side these **GPGPUs** to allow developers to use these cards for other tasks normally run on the **CPU**, like **physics** and **AI**.
+
+        ### Massive Parallelism
+
+        **GPUs** are incredibly fast, but unlike a **CPU** which mostly executes things in a serial fashion, **GPUs** run everything in parallel on custom silicon
+        dedicated for **3D** rendering. Much of the processor space on a **GPU** is made up of several thousand smaller processor cores called **shader cores**.
+        Each shader invocation is independent and share no info with neighboring pixel shaders. This allows thousands of shaders to be running in parallel.
+        **GPUs** use a **SIMD** architecture, which means a single instruction is run across multiple shaders and they execute in lock-step.
+    </ProseMarkdown>
+</div>
