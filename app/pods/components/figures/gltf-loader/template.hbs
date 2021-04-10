@@ -1,8 +1,0 @@
-<DemoViewer
-    @cameraPosition={{hash x=0 y=0 z=10}}
-    @cameraLookAt={{hash x=0 y=0 z=0}}
-    @iframeIdentifier='gltf-loader'
-    @hdr={{@props.hdr}}
-as |parent|>
-    <GltfModel @parent={{parent}} @modelSrc={{@props.modelSrc}} @modelPosition={{@props.modelPosition}} @modelRotation={{@props.modelRotation}}/>
-</DemoViewer>
