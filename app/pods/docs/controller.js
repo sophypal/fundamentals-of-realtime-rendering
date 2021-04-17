@@ -76,7 +76,7 @@ export default class extends Controller {
             label: 'Resources',
             links: [
                 {
-                    label: 'Real-Time Rendering',
+                    label: 'Realtime Rendering',
                     href: 'http://realtimerendering.com',
                     external: true,
                 },

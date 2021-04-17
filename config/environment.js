@@ -45,7 +45,7 @@ module.exports = function (environment) {
   }
 
   if (environment === 'production') {
-    ENV.rootURL = '/fundamentals-of-realtime-rendering'
+    ENV.rootURL = '/fundamentals-of-realtime-rendering/'
   }
 
   return ENV;

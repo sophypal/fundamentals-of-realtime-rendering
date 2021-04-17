@@ -24,17 +24,17 @@
     />
     <ProseMarkdown>
         When a car moves, the internal components go with it, otherwise it would be weird for a car to move and leave it's engine
-        behind. So it shoulndn't surprise you that transforms can grouped in this way as well. When a car moves 5 units forward,
+        behind. So it shouldn't surprise you that transforms can grouped in this way as well. When a car moves 5 units forward,
         its engine should be moving the same amount. This is what happens when you chain multiple transforms together.
 
-        Let <KatexSpan>\bold{C}</KatexSpan> be the car's transform (location and origin in world space), and <KatexSpan>\bold{E}</KatexSpan> be the engine's transform (relative the cards
+        Let <KatexSpan>\bold{C}</KatexSpan> be the car's transform (location and origin in world space), and <KatexSpan>\bold{E}</KatexSpan> be the engine's transform (relative the cars
         local space), and <KatexSpan>\boldsymbol{p}</KatexSpan> equal a point on the engine (in engine local space). This can be expressed with
         <KatexSpan>\boldsymbol{p}' = \bold{C} \cdot \bold{E} \cdot \boldsymbol{p}</KatexSpan>.
 
         <KatexSpan>\boldsymbol{p}'</KatexSpan> is the transformed point after being multiplied by
         <KatexSpan>\bold{C} \cdot \bold{E}</KatexSpan>.
 
-        This chaining can also expressed as a tree. In fact, it's often the same tree used to logically group them together.
+        This chaining can also be expressed as a tree. In fact, it's often the same tree used to logically group them together.
 
     </ProseMarkdown>
     <ProseFigure
@@ -47,9 +47,9 @@
         isn't entirely necessary as **world** is the root and we were looking to find the engine's **position** and **orientation**
         relative to the **world space**. **World** can usually carry an identity matrix so you can multiply away without affecting the result.
 
-        Going from **local** to **world** is a common operation but going from **world** to **local** can also be useful. Given a <KatexSpan>\boldsymbol{p}'</KatexSpan>, it's
+        Going from **local** to **world** is a common operation but going from **world** to **local** can also be useful. Given <KatexSpan>\boldsymbol{p}'</KatexSpan>, it's
         possible to get <KatexSpan>\boldsymbol{p}</KatexSpan> with <KatexSpan>\bold{E}^{-1} \cdot \bold{C}^{-1} \cdot \boldsymbol{p}'</KatexSpan>. Math libraries usually allow you to compute the inverse matrix.
-        In **ThreeJS**, each object also has world matrix that is already computed so you don't have to traverse this tree.
+        In **ThreeJS**, each object also has a world matrix that is already computed so you don't have to traverse this tree.
     </ProseMarkdown>
     <ProseFigure
         @figureId='3'
@@ -71,20 +71,20 @@
         ## Non-Renderable Objects
 
         This logical chaining of object relationships and transforms is what makes up a scene graph. A scene graph consist of
-        nodes which present renderable and non-renderable objects in the scene. Non-renderable nodes represent abstract objects.
+        nodes which represent renderable and non-renderable objects in the scene. Non-renderable nodes represent abstract objects.
         Lights and cameras, for example, aren't modeled as a renderable object but their transforms are useful for rendering the
         entire scene. Empty objects can also be valid nodes. These nodes can serve as parents to renderable objects to help
         in grouping them. There can be plenty of other non-renderable nodes that will be ignored by the renderer. Game engine
         scene graphs might contain these:
 
-        * **Volumes** - used in games to design areas that have specific requirements in game play like triggering events, capturing reflections, designate areas for special rendering instructions
+        * **Volumes** - used in games to design areas that have specific requirements in game play like triggering events, capturing reflections, designating areas for special rendering instructions
         * **Navigation Mesh** - used in AI pathfinding for determining walkable surfaces
         * **Locators**, **Emitters** - points in space used for specific game play purposes like particles, sound, waypoints, points of interests, .etc
 
         ## Scene Graphs vs Octrees vs BVH
 
-        An **octree** is a common data structure used to recursively dividing space equally into 8 smaller spaces. A **BVH**,
-        or **bounding volume heirarchy** is a similar space dividing structure but uses bounding boxes to group clusters of objects
+        An **octree** is a common data structure used to recursively divide space equally into 8 smaller spaces. A **BVH**,
+        or **bounding volume heirarchy** is a similar space dividing structure but uses bounding volumes to group clusters of objects
         closer together. A **scene graph** is most commonly used to repesent all objects in a scene and their transform relationships. It's usually
         separate from accelerated data structures used in spatial partitioning to help with visibility determination.
 
