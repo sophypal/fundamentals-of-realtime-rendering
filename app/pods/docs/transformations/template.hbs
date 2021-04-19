@@ -93,7 +93,7 @@
         is just 1 so the **dot product** is simplified to just <KatexSpan>\cos \theta</KatexSpan>.
 
 
-        To get a better intuition of dot products without having to do mental gymnastics, I think of it as angle
+        To get a better intuition of dot products without having to do mental gymnastics, I think of it as an angle
         sensor.
         It returns **-1** when the angles are <KatexSpan>180 \degree</KatexSpan>, and 1 when they're aligned. When you plot a **cosine** function, you see
         a sinusoidal waveform. Both <KatexSpan>\sin</KatexSpan> and <KatexSpan>\cos</KatexSpan> create the same wave but they're offset by <KatexSpan>90 \degree</KatexSpan>.
@@ -120,7 +120,7 @@
         ### Cross Product
 
         The other product form, called a **cross product**, produces a vector as a result. **Cross products** are slightly less
-        intuitive and is defined as as follows:
+        intuitive and is defined as follows:
 
         <KatexBlock>
             \boldsymbol{a} \times \boldsymbol{b} = [a_y \cdot b_z - a_z \cdot b_y, a_z \cdot b_x - a_x \cdot b_z, a_x \cdot b_y - a_y \cdot b_x]
@@ -154,6 +154,7 @@
 
         ## 2D Transformations
 
+
         A transformation is any operation that take as input, vertices, and converts them in some way, like moving,
         reshaping, or rotating them.
 
@@ -181,7 +182,7 @@
         consist of **imaginary numbers**. Learning some **complex** math is essential to intuitively understanding rotation.
 
         In mathematics, <KatexSpan>\boldsymbol{i}</KatexSpan> is the imaginary number. Whether or not this number actually exist doesn't really matter. It is useful. Just as
-        **infinity** doesn't actually exist but it's useful. Well I guess you can say it exist because it's a useful
+        **infinity** doesn't actually exist but it's useful. Well I guess you can say it exists because it's a useful
         tool and most constructs in math aren't physically real anyways.
 
         <KatexSpan>\boldsymbol{i}</KatexSpan> is <KatexSpan>\sqrt{-1}</KatexSpan>.
@@ -397,7 +398,7 @@
         to use for the inner product.
 
         If matrix multiplication is new to you, this could take a lot more practice to get the hang of it.
-        If there is anything to get out of this is that the inner dimensions has to match. As we've seen,
+        If there is anything to get out of this it's that the inner dimensions has to match. As we've seen,
         a <KatexSpan>2 \times 2</KatexSpan> matrix can be multiplied by a <KatexSpan>2 \times 2</KatexSpan> and a
         <KatexSpan>3 \times 3</KatexSpan> by a <KatexSpan>3 \times 3</KatexSpan>. A <KatexSpan>3 \times 3</KatexSpan>
         cannot be multiplied by <KatexSpan>1 \times 3</KatexSpan> but a <KatexSpan>1 \times 3</KatexSpan>
@@ -695,7 +696,7 @@
         Let's extend this to **3D**. In **2D**, rotation is only done about one axis, an imaginary axis not on the complex plane.
         In **3D**, you can rotate about any of the 3 axes **x**, **y**, or **z**. Rotation in **2D** is still possible in **3D**. In fact,
         it's generally easier to think of rotation in **3D** as a set of rotations about any of the 3 axes. Rotation around any one axis
-        is a **2D** rotation. For example, a normal **2D** rotation can be seen as a rotation about the **z** axis. Let's defined that matrix.
+        is a **2D** rotation. For example, a normal **2D** rotation can be seen as a rotation about the **z** axis. Let's define that matrix.
 
         <KatexBlock>
         \bold{R} \times \boldsymbol{p} =
@@ -728,7 +729,7 @@
         The third row and column is 1 and has the effect of keeping the current value of <KatexSpan>p_z</KatexSpan>. There's a special matrix,
         that when multiplied by it, will always return the original matrix. This is called an identity matrix. It's an
         almost empty matrix with the diagonals filled with 1. I hope that by now, there's some kind of intuition forming about the 1 and 0
-        picking specific parts of the vector to keep. Just like we saw in the **3D** rotation about **z**. Let's formally introduce the identity matrix.
+        picking specific parts of the vector to keep. Just like we saw in the **3D** rotation about **z**. Let's formally introduce the **identity** matrix.
 
         <KatexBlock>
         \bold{I} =
@@ -864,6 +865,7 @@
         The angle at which it rotates, is defined by the real part <KatexSpan>\cos \theta \cdot w</KatexSpan>. To be more accurate <KatexSpan>\cos \theta \cdot w</KatexSpan>
         equals the half-angle. Multiplying by <KatexSpan>\boldsymbol q</KatexSpan>, involves a half-angle rotation, and <KatexSpan>\boldsymbol q^{-1}</KatexSpan>
         doubles that rotation.
+
 
         There are whole collections of books devoted to **quaternions** alone. It's a complex topic. **4D** rotations are hard
         to visualize and I won't bore you with more details. However, if there is one thing I want you to get out of this then it
