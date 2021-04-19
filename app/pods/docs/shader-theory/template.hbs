@@ -3,8 +3,8 @@
         All 3D graphics programming APIs allow you to take control of the GPU. APIs pay for that freedom and flexiblity by being a
         little bit cumbersome to use. While in the past, these APIs were somewhat abstract, the trend is gravitating towards more
         low level APIs so developers can harness the full power of the hardware. To do anything in 3D nowadays requires some knowledge
-        on writing shaders. Unless you're working in an engine that was powerful material editing workflows,
-        more then likely you'll encounter scenarios that require custom shaders. Even then, the more you know about shaders,
+        on writing shaders. Unless you're working in an engine that has powerful material editing workflows,
+        more than likely you'll encounter scenarios that require custom shaders. Even then, the more you know about shaders,
         the more complex materials you can create. Let's start learning the basics.
     </Heading>
     <ProseMarkdown>
@@ -17,7 +17,7 @@
         Shaders are compiled by the **GPU**. While it's possible to precompile the shaders, you typically want to compile it dynamically
         either during loading, through updates to user settings and configurations, or god-forbid during gameplay. Due to the variability
         of **PC** hardware, running code compiled on one architecture is bad for many reasons. Driver updates might invalidate or even break
-        your code. **GPUs** can be changed. Some applications are smart and will compile shaders only once but performance is the not the
+        your code. **GPUs** can be changed. Some applications are smart and will compile shaders only once but performance is not the
         concern of these tutorials.
 
         Shaders are written in a **C-style** language optimized for vectorized architectures. They contain several built-in functions for
@@ -54,14 +54,14 @@
 
             * vertex data is transferred to gpu memory
             * draw commands are issued which tell the **GPU** how to interpet the data
-            * multiple vertex shaders are invoked for each vertex in the object and the all run to completion
+            * multiple vertex shaders are invoked for each vertex in the object and they all run to completion
             * multiple fragment shaders are invoked for each pixel in the viewport
 
         5. swap back frame buffer with front buffer
         6. Start over again with 3
 
         For performance reasons, you might not see this order followed to the tee in practice. **GPU** latency is quite slow so data transfers are
-        typically avoid during the render loop. Setting up **GPU** buffers for vertex data shouldn't be done per frame but passing shader **uniforms** are normally
+        typically avoided during the render loop. Setting up **GPU** buffers for vertex data shouldn't be done per frame but passing shader **uniforms** are normally
         done in the loop.
 
         ## Inputs
@@ -110,7 +110,7 @@
         ```
 
         This shader is expecting **aPos** to come from the first position of this buffer, and **aColor** second. **OpenGL** needs to know about the offset and stride
-        to calculate the where those attributes are. **aPos** will take 12 bytes because its a **vec3** (contains 3 **float**s). **aColor** is a similar
+        to calculate where those attributes are. **aPos** will take 12 bytes because its a **vec3** (contains 3 **float**s). **aColor** is a similar
         data type so it takes 12 bytes. When you layout a single vertex in memory it will look like the diagram below.
 
         </ProseMarkdown>
@@ -124,7 +124,7 @@
         The offset describes how many bytes from the beginning of the first vertex attribute.
 
         NOTE: Older **OpenGL** versions pre v3 could not use the keyword **layout** in the vertex shader. The order was implied from the order of declaration.
-        Keywords like **attribute**, **varying** were used to instead of **in** and **out** to show they were inputs or outputs. **WebGL 1.0** is based on **OpenGL**
+        Keywords like **attribute**, **varying** were used instead of **in** and **out** to show they were inputs or outputs. **WebGL 1.0** is based on **OpenGL**
         **ES 2.0** spec so it cannot use **layout**.
 
         ### Uniforms
@@ -144,6 +144,6 @@
 
         In **OpenGL** v3, use **out** to specify which variable becomes an input for the fragment shader. In previous versions, use **varying**. Vertex shaders should
         also output a position to the next stage in the graphics pipeline. You set the global variable **gl_Position** to do this. For fragment shaders, you should output
-        to **gl_FragColor** or and define our own **out** variable if using version 3 and above.
+        to **gl_FragColor** or define our own **out** variable if using version 3 and above.
     </ProseMarkdown>
 </div>

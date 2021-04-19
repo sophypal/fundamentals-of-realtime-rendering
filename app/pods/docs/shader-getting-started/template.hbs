@@ -4,7 +4,7 @@
         We'll be using THREE.js and GLSL in this tutorial so you can interact with the embedded editor.
     </Heading>
     <ProseMarkdown>
-        Hopefully the brief introduction into shader theory from the last chapter provide some clarity of on what steps you need to take to get a basic
+        Hopefully the brief introduction into shader theory from the last chapter provided some clarity of on what steps you need to take to get a basic
         scene rendered. We haven't been focused too much on syntax up to this point for a reason. I wanted you to see, at a high-level
         how things would fit together.
 
@@ -15,7 +15,7 @@
         this whole series is about shaders, I'll avoid manually defining this mesh data so we can focus on mastering shader programming.
 
         The online editor has already been setup for **THREE.js**. If you'd like to follow along from scratch, I recommend reading the *Getting Started*
-        page at **THREE.js**. Otherwise, open the [Playground](/playground) and follow along.
+        page at [THREE](http://threejs.org/). Otherwise, open the {{#link-to 'playground'}}Playground{{/link-to}} and follow along.
 
         In **THREE.js**, a mesh can be created by using **THREE.Mesh**. Vertex information is attached to this mesh with **THREE.BufferGeometry**. Shaders are
         encapsulated in **THREE.js** as a material. This is a common concept used throughout the graphics industry. Materials are basically shaders and
@@ -73,7 +73,7 @@
         camera.matrixWorldInverse * object.matrixWorld
         ```
 
-        The the final multiplication with the projection reshapes the view space into clip space.
+        The final multiplication with the projection reshapes the view space into clip space.
 
         ## Color All The Pixels
 
@@ -189,7 +189,7 @@
         scene.add(sphere);
         ```
 
-        Now we have to pipe his per-vertex color out to the fragment shader. We do that by creating a **varying** variable.
+        Now we have to pipe this per-vertex color out to the fragment shader. We do that by creating a **varying** variable.
 
         vertex shader:
 
@@ -221,7 +221,7 @@
 
         The truth is, vertex coloring has fallen out of favor long ago, at least as a rendering
         technique. It still has usage for creating id maps which are then baked and used in other material processes.
-        Of course, you're going for that retro look, then this is a performance friendly way to achieve that. Nowadays,
+        Of course, if you're going for that retro look, then this is a performance friendly way to achieve that. Nowadays,
         color is provided by textures. More on that later.
     </ProseMarkdown>
     <ProseFigure
@@ -231,7 +231,7 @@
     />
     <ProseMarkdown>
         NOTE: *There seems to be a problem with the seams of this sphere geometry. While normally with just vertex coloring
-        you're not suppose to get seems as the colors are smoothly blended between neigbhoring vertexes. This might be
+        you're not suppose to get seems as the colors are smoothly blended between neigbhoring vertices. This might be
         an issue with the mesh as edges that don't share vertices won't blend*.
 
         ### Generating colors procedurally in the shader
@@ -374,7 +374,7 @@
         ## Per-pixel non-linear scenario
 
         Let's do that again but perform the same instructions in the fragment shader. We'll shift some things around so color is generated
-        at the pixel level. We need to pass around the vertex position and normal around but this time we'll do the light calculations there.
+        at the pixel level. We need to pass around the vertex position and normal but this time we'll do the light calculations there.
         Make sure to open a new playground window and keep the other for comparison.
 
         fragment shader:
@@ -413,7 +413,7 @@
     <ProseMarkdown>
         Do you notice a difference. No? Maybe? Try lowering the resolution of the mesh for both examples. 16 might be a good number. See the difference now?
         I think the difference was obvious at first but it is true that lowering the resolution amplies the differences. This spot light effect
-        has more impact with the per-pixel version while per-vertex is dull.
+        has more impact with the per-pixel version while per-vertex is duller.
 
         The reason is because in the per-vertex case, color is produced per vertex then blended. If the light's intensity was linear, the differences
         would be hard to spot but the intensity over distance follows the inverse square law (not linear). The higher the resolution, the more densily
@@ -430,10 +430,10 @@
         In shaders, textures are **Samplers**, either (**sampler2D**, or **samplerCube**). Samplers are our gateway for accessing the texture in the shader. In **GLSL**,
         a texture lookup requires calling the built-in function **texture** and you pass in the sampler along with a valid texture coordinate. We need a **sampler**
         because, well, we're not exactly retrieving texels. We're retrieving samples. The texture coordinates you provide could map to one or many texels.
-        It can even not address a single texel. You can think of this sampler as a texel generator. It tries to return a pixel color at the coordinates you
+        It could possibly not address a single texel. You can think of this sampler as a texel generator. It tries to return a pixel color at the coordinates you
         requested, and more often then not, this color is generated by taking samples from neighboring texels around that coordinate.
 
-        At it's root, it's basically performing linear interpolation. For simple one-dimensional linear interpolation, you can picture this operation as drawing
+        At it's roots, it's basically performing linear interpolation. For simple one-dimensional linear interpolation, you can picture this operation as drawing
         a line between two points and the extrapolated point is taken from this line.
     </ProseMarkdown>
     <ProseFigure
@@ -503,7 +503,7 @@
         ```javascript
         const loader = new THREE.TextureLoader();
 
-        loader.load('{{root-url 'textures/castle_wall.jpg'}}, function (texture) {
+        loader.load({{root-url 'textures/castle_wall.jpg'}}, function (texture) {
             const sphere = new THREE.Mesh(
                 new THREE.SphereBufferGeometry(1, 32, 32), // creates a sphere with radius 1 with 32 segments horizontally and vertically
                 new THREE.ShaderMaterial({

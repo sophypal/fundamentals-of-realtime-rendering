@@ -8,7 +8,7 @@
     <ProseMarkdown>
         ## Rendering Equation
         <KatexBlock>
-            L_o(\bold{p}, \omega_o, \lambda)  = L_e(\bold{p},\omega_o, \lambda) + \int f_r(\bold{p},\omega_o,\omega_i, \lambda) L_i(\bold{p},\omega_i) \cos\omega_i \space d\omega_i
+            L_o(\bold{p}, \omega_o)  = L_e(\bold{p},\omega_o) + \int f_r(\bold{p},\omega_o,\omega_i) L_i(\bold{p},\omega_i) \cos\omega_i \space d\omega_i
         </KatexBlock>
 
         Not much can be gleamed from that expression with no background in physics. This is often how I'm introduced to the subject
@@ -27,10 +27,10 @@
         or the light source itself. This is described by the
         <KatexSpan>L_e</KatexSpan> part of the formula.
         <KatexBlock>
-            L_e(\bold{p},\omega_o, \lambda)
+            L_e(\bold{p},\omega_o)
         </KatexBlock>
 
-        The other half of the equation, <KatexSpan>\int f_r(\bold{p},\omega_o,\omega_i, \lambda) (L_i(\bold{p},\omega_i) \cos\omega_i \space d\omega_i \)</KatexSpan>
+        The other half of the equation, <KatexSpan>\int f_r(\bold{p},\omega_o,\omega_i) (L_i(\bold{p},\omega_i) \cos\omega_i \space d\omega_i \)</KatexSpan>
         is commonly referred to as the reflectance and is described as the light intensity reflected or scattered from a surface. The value of the light exiting a surface, is the acculmination of light
         from all directions reaching the surface. If there was no light in the scene, or a light source was being occluded,
         then this value would be zero for that particular point on the surface.
@@ -67,31 +67,31 @@
 
         Together this forms this part of the equation:
         <KatexBlock>
-            f_r(\bold{p},\omega_o,\omega_i, \lambda) L_i(\bold{p},\omega_i) \cos\theta
+            f_r(\bold{p},\omega_o,\omega_i) L_i(\bold{p},\omega_i) \cos\theta
         </KatexBlock>
 
         ## It's Not Really That Easy
 
         In reality, light gets reflected more than once. A single ray of light would need to be absorbed completely before
         its contribution can be eliminated in the equation. It can also come in any direction, except for the bottom half
-        the surface that is opposite the direction of light. There is no analytical solution so we'd need to either sample
+        of the surface that is opposite the direction of light. There is no analytical solution so we'd need to either sample
         randomly or integrate over this hemisphere in descrete steps. Because of the recursive nature of reflectance, we'd
         need to do this multiple times for every surface that is within this half-sphere of influence.
 
         ## What About Shadows?
 
         Shadows occur intrinsicly due to absense of light. The light would need to be absorbed completely before reaching the
-        surface.  It's too costly for a real-time system. Systems
+        surface.  It's too costly for a realtime system. Systems
         that use this equation fully are offline rendering ones. **Ray tracing** is a rendering technique that uses that approach.
         You can produce soft shadows, simulate the effects of light through glass and other transparent substances like water. Rendering
         a single frame can take hours, or even days, depending on the complexity.
 
         ## Conclusion
 
-        That's where we'll leave it for now. Real-time techniques are the focus here but I felt this introduction was necessary to
-        show you what higher quality renderers do to achieve really realistic results. While the real-time techniques are cheaper,
-        modern tech like nVidia RTX cards offer built-in hardware with AI-assisted algorithms that offer real-time ray-tracing.
-        In addition, physically-based shading models, which offer real-time realistic shading of materials, are in heavy use in
+        That's where we'll leave it for now. Realtime techniques are the focus here but I felt this introduction was necessary to
+        show you what higher quality renderers do to achieve really realistic results. While the realtime techniques are cheaper,
+        modern tech like nVidia RTX cards offer built-in hardware with AI-assisted algorithms that offer realtime ray-tracing.
+        In addition, physically-based shading models, which offer realtime realistic shading of materials, are in heavy use in
         the industry today.
     </ProseMarkdown>
 </div>

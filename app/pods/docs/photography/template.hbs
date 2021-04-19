@@ -27,7 +27,7 @@
     <ProseMarkdown>
         We perceive proportions in the real world though a lens, our eyes. The shape of this lens and the field of view changes the apparent
         relative sizes of the objects we see. We know they're actually not changing size, that would be silly. Objects further away simply
-        gets smaller and eventually vanish into the horizon. They vanish because our field of view covers more area the further out it is.
+        get smaller and eventually vanish into the horizon. They vanish because our field of view covers more area the further out it is.
     </ProseMarkdown>
     <ProseFigure
         @figureId='3'
@@ -38,7 +38,7 @@
         ## Pinhole Camera
 
         In the early days, a camera was simply a box with a tiny hole to let light through. The diameter of the hole had to be small to help focus
-        the light without lenses. An inverted image is produced at the back of the camera box, opposite the hole. Adjusting the image plane distance
+        the light without a lens. An inverted image is produced at the back of the camera box, opposite the hole. Adjusting the image plane distance
         will adjust the **focal length** and **viewing angle**.
 
         **Focal length** and **field of view** are directly related. Changing one will change the other. Play with this example to get a feel
@@ -51,17 +51,17 @@
     />
     <ProseMarkdown>
         Hopefully you've played enough with the figure above to get the sense that adjusting the image plane forwards closer to the aperture, the field
-        of view gets larger, thereby allowing covering more area. It's zooming out. When moving the image plane backwards, you get the opposite effect.
+        of view gets larger, thereby covering more area. It's zooming out. When moving the image plane backwards, you get the opposite effect.
         It's zooming in.
 
         ## An Imperfect Camera
 
         You might be wondering if changing the diameter of the pinhole has any effect. It does, however, in a not so obvious way. The smaller the hole,
-        the better the quality of the image, or rather, the sharper the image. The bigger the hole, the bigger the grouping of rays captured and the the
+        the better the quality of the image, or rather, the sharper the image. The bigger the hole, the bigger the grouping of rays captured and the
         blurrier the image. This grouping of light rays is commonly referred to as the circle of confusion or bokeh. While the diameter effects maximum focal
         length, pinhole sizes are often kept constant and an optimal size is chosen based on the optimum distance to the image plane to keep things in focus.
 
-        Ideally, the perfect diameter would be small enough to limit all but a single ray from each direction. The resulting would be really
+        Ideally, the perfect diameter would be small enough to limit all but a single ray from each direction. The resulting image would be really
         sharp and each point on the image would correspond to exactly one ray instead of a grouping of rays arriving at random angles. However, this
         would be physically impossible. Such a small pinhole would result in diffraction artifacts as the size approaches the wavelength of the light.
 
@@ -69,7 +69,7 @@
 
         Pinhole cameras are nice but they bring with them a slew of issues. Modern day cameras are equipped with a lens to help focus the light unto a
         single point. Unlike a pinhole camera, lenses introduce other artifacts like **depth of field**. **Depth of field** is a property of
-        a lens' ability to focus outside the focal length or lack of focus to be more accurate. Within the focal range, objects appear sharp but blurry outside of it. This is mostly not an
+        a len's ability to focus outside the focal length or lack of focus to be more accurate. Within the focal range, objects appear sharp but blurry outside of it. This is mostly not an
         issue as people perceive this artifact as astethically pleasing and often buy better lenses to achieve more depth of field easier.
     </ProseMarkdown>
     <ProseFigure
@@ -85,10 +85,10 @@
         ## Virtual Cameras
 
         If photorealism is the goal for a work of art, then you can do no better than with a photocamera. However, this is not easy to achieve when the subject
-        being photograph is a work of fiction. Two of the biggest driving force behind recent advancement in computer generated imaging is films and obviously
-        games. The two being categorized as offline vs real-time rendering, the latter of which we'll focus on more.
+        being photographed is a work of fiction. Two of the biggest driving force behind recent advancement in computer generated imaging is films and obviously
+        games. The two being categorized as offline vs realtime rendering, the latter of which we'll focus on more.
 
-        Generating an image in a computer requires a camera, just like their real-world counterparts. Virtual cameras used in real-time renders, are modeled
+        Generating an image in a computer requires a camera, just like their real-world counterparts. Virtual cameras used in realtime renders, are modeled
         after an ideal pinhole camera. No diffraction effects, and no blur. Computer generated images are ultra sharp as there is infinite depth of field since
         there is no physical lens.
 
@@ -98,7 +98,7 @@
     </ProseMarkdown>
     <ProseFigure
         @figureId='6'
-        @figureCaption="A frustum is a pyramid with it's peak cut off. The imaging plane is before the crossing point (nodal point). The image produced is the same wether behind or in front of this nodal point, except that it will not be inverted."
+        @figureCaption="A frustum is a pyramid with it's peak cut off. The imaging plane is before the crossing point (nodal point). The image produced is the same whether behind or in front of this nodal point, except that it will not be inverted."
         @componentName='figures/camera-projection'
         @props={{hash enableCameraControls=true}}
     />

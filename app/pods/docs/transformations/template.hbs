@@ -32,7 +32,7 @@
         head of <KatexSpan>\boldsymbol{a}</KatexSpan>. In other words, the point at <KatexSpan>\boldsymbol{a}</KatexSpan> becomes the new origin for <KatexSpan>\boldsymbol{b}</KatexSpan>, and <KatexSpan>\boldsymbol{b}</KatexSpan>'s position is relative
         to the new coordinate space created from <KatexSpan>\boldsymbol{a}</KatexSpan>.
 
-        You can also add add a scalar value to a vector. A scalar just means a single number.
+        You can also add a scalar value to a vector. A scalar just means a single number.
 
         <KatexBlock>
         s + \boldsymbol{a} = [s + a_x, s + a_y, s + a_z]
@@ -68,7 +68,7 @@
             \boldsymbol{a} \cdotp \boldsymbol{b} = a_x \cdot b_x + a_y \cdot b_y + a_z \cdot b_z
         </KatexBlock>
 
-        The components are multiplied together and summed.
+        The components are multiplied together then summed.
 
         Play around with changing the direction for each of the vectors and see if you can figure out the
         relationship between the dot product and the angles of the vectors.
@@ -147,14 +147,15 @@
         @figureId='5'
         @figureCaption='Cross products in action. Like the dot product, the color of the sweeping angle represents the magnitude of the result, only this time the output is a vector.' />
     <ProseMarkdown>
-        As far as other usages go, it can be used to derive angles between vectors. Its used to calculate the amount of
-        force on a wrench. The angle at which you hold the wrench will determine how much force is applied to the it.
+        As far as other usages go, it can be used to derive angles between vectors. It's used to calculate the amount of
+        force on a wrench. The angle at which you hold the wrench will determine how much force is applied to it.
         Pushing down perpendicular to the wrench will apply the most force. This relationship is represented with the
         **sine** function.
 
         ## 2D Transformations
 
-        A transformation is any operation that takes input vertices and converts them in some way, like moving,
+
+        A transformation is any operation that take as input, vertices, and converts them in some way, like moving,
         reshaping, or rotating them.
 
         ### Translation
@@ -176,7 +177,7 @@
 
         ### Rotation
 
-        While translations and scaling is fairly intuitive without much theory, explaining rotation transforms needs
+        While translations and scaling is fairly intuitive without much theory, explaining rotation transforms need
         more preparation to make things clear. So far we haven't had to deal with **complex numbers**. That is, numbers that
         consist of **imaginary numbers**. Learning some **complex** math is essential to intuitively understanding rotation.
 
@@ -205,7 +206,7 @@
         Adding **complex numbers** is done component-wise. Add the **reals** together then add the **imaginaries** together. Multiplying them involves the basic
         **FOIL** method (first terms + outer terms + inner terms + last terms).
 
-        When a **complex number** is multiplied or added with it's conjugate, the result is a real number.
+        When a **complex number** is multiplied or added with its conjugate, the result is a real number.
 
         <KatexBlock>
         (a + b\boldsymbol{i}) \cdot (a - b\boldsymbol{i}) = (a^2 + abi - abi + -b^2i^2) = (a^2 + b^2)\\
@@ -267,7 +268,7 @@
 
         The **complex number** you multiply by, can be represented as a **unit vector** in **2D** space. Any rotation of a vector (position or directional) in **2D** space can be
         performed by simply multiplying that vector by another vector. This transform vector is defined as <KatexSpan>(\cos \theta + \sin \theta \boldsymbol{i})</KatexSpan>.
-        This can also be neatly expressed in polar form <KatexSpan>r\boldsymbol{e}^{\boldsymbol{i}\theta}</KatexSpan>.
+        This can also be neatly expressed in polar form <KatexSpan>\boldsymbol{e}^{\boldsymbol{i}\theta}</KatexSpan>.
     </ProseMarkdown>
     <ProseFigure
         @componentName='figures/math/rotation-2d'
@@ -284,7 +285,7 @@
         are carried out in the coordinate space the object was defined in. If the object for instance is a simple triangle,
         then the coordinate space would typically be found at the center of this triangle.
 
-        If this triangle started out centered at the origin and was then translated by <KatexSpan>\bold{T} = (5, 0)</KatexSpan>, the
+        If this triangle started out centered at the origin and was then translated by <KatexSpan>\bold{T} = (5, 0)</KatexSpan>,
         then the triangle's center position is moved by 5 units in the **X-axis**  but the coordinate system is still
         centered at <KatexSpan>(0, 0)</KatexSpan>. If you follow it up with a <KatexSpan>90 \degree</KatexSpan>rotation,
         then this would place the new point at 5 units up on the **Y-axis**.
@@ -359,7 +360,7 @@
             \end{bmatrix}
         </KatexBlock>
 
-        Let me explain the the subscript notation used here. To access all the elements in a single row or column
+        Let me explain the subscript notation used here. To access all the elements in a single row or column
         I just use a single subscript. To address all elements for the <KatexSpan>ith</KatexSpan> row, I will use <KatexSpan>\boldsymbol{a}_{i}</KatexSpan>.
 
         I use a comma in place of the row index to represent all rows. For example, to address the <KatexSpan>jth</KatexSpan> column
@@ -401,8 +402,7 @@
         a <KatexSpan>2 \times 2</KatexSpan> matrix can be multiplied by a <KatexSpan>2 \times 2</KatexSpan> and a
         <KatexSpan>3 \times 3</KatexSpan> by a <KatexSpan>3 \times 3</KatexSpan>. A <KatexSpan>3 \times 3</KatexSpan>
         cannot be multiplied by <KatexSpan>1 \times 3</KatexSpan> but a <KatexSpan>1 \times 3</KatexSpan>
-        can be multiplied by a <KatexSpan>3 \times 3</KatexSpan>. The order is important. Even for a
-        <KatexSpan>3 \times 3</KatexSpan>, swapping the order would result in different results.
+        can be multiplied by a <KatexSpan>3 \times 3</KatexSpan>.
 
 
         ### Column-Major Vector
@@ -416,7 +416,7 @@
         You can have <KatexSpan>\bold{A} \times \bold{B} \times \bold{P}</KatexSpan> or <KatexSpan>\bold{B} \times \bold{A} \times \bold{P}</KatexSpan>
         but never <KatexSpan>\bold{A} \times \bold{P} \times \bold{B}</KatexSpan> or <KatexSpan>\bold{B} \times \bold{P} \times \bold{A}</KatexSpan>.
 
-        Due to the non-commutative property of matrices, matrices are order dependent. You can't actually swap the the order,
+        Due to the non-commutative property of matrices, matrices are order dependent. You can't actually swap the order,
         but you can change when they're evaluated.
 
         You can evaluate <KatexSpan>\bold{A} \times \bold{B} \times \bold{P}</KatexSpan> like <KatexSpan>(\bold{A} \times \bold{B}) \times \bold{P}</KatexSpan>
@@ -465,14 +465,14 @@
 
         Since we're on the theme of correcting misinformation, this right-to-left evaluation has nothing to do with
         being **right-handed**. Nor does it have anything to do with column-major ordering, which is an implementation
-        detail on how to store the values of matrix in memory.
+        detail on how to store the values of a matrix in memory.
 
         Here's a visual example of this mental gymnastics.
     </ProseMarkdown>
     <ProseFigure
         @componentName='figures/math/transform-intuition'
         @figureId='8'
-        @figureCaption='Left-to-right evaluation. Coordinate systems are being transformed. The X-axis now becomes the Y-axis in the first transform. The next transform positions the new coordinate system 3 units to the left of the original. The point P is drawn 3 units on the X-axis, which is facing up.'
+        @figureCaption='Left-to-right evaluation. Coordinate systems are being transformed. The X-axis now becomes the Y-axis in the first transform. The next transform positions the new coordinate system 3 units to the right of the original. The point P is drawn 1 unit on the X-axis, which is now facing up.'
         @props={{hash mode='left-to-right'}}
     />
     <ProseFigure
@@ -574,7 +574,7 @@
         ### Rotation Matrix
 
         A 3D rotation matrix requires a little more explaining. Recall that a 2D rotation transform is the complex number
-        <KatexSpan>\cos \theta + \sin \theta \hat{\boldsymbol{i}}</KatexSpan> or the vector <KatexSpan>[\cos \theta, \sin \theta]</KatexSpan>.
+        <KatexSpan>\cos \theta + \sin \theta \boldsymbol{i}</KatexSpan> or the vector <KatexSpan>[\cos \theta, \sin \theta]</KatexSpan>.
         Setting up a **2D** rotation matrix for this is not as straightforward but I'll walk through it.
 
         <KatexBlock>
@@ -745,7 +745,7 @@
 
         When evaluating the <KatexSpan>p_x</KatexSpan> component of the transformed point, the first row <KatexSpan>[1,0,0]</KatexSpan> will be multiplied out,
         keeping only the <KatexSpan>p_x</KatexSpan> component and scaling it by 1. For <KatexSpan>p_y</KatexSpan>, the second row <KatexSpan>[0,1,0]</KatexSpan> will be multiplied
-        and keeps only the <KatexSpan>p_y</KatexSpan>. It's the same story for the <KatexSpan>p_z</KatexSpan>.
+        and keeps only <KatexSpan>p_y</KatexSpan>. It's the same story for <KatexSpan>p_z</KatexSpan>.
 
         When rotating about any vector **x** **y** or **z**, that axis needs to keep its current value. Rotating about **Z** should
         keep an object's depth intact and only points along the **XY** plane are transformed.
@@ -782,7 +782,7 @@
         Unfortunately, this chapter is already too big and there is a lot left to cover. We'll revisit it in a future
         chapter so projection can get its own treatment. For now, all you need to know is that perspective projection
         is what allows us to figure out the **2D** coordinates for **3D** points. I discussed the basic theory in the Photography
-        section.
+        chapter.
 
         ### Concatenation
 
@@ -801,9 +801,9 @@
         With **Euler** transforms, any orientation in **3D** space can be represented with 3 angles, rotations about **X**,**Y**,**Z**.
         Since these rotations are chained, the order matters. There's no standard order for rotation. One is often chosen to help avoid
         getting into **gimbal lock**. **Gimbal lock** is a phenomenon that only affects **Euler** transforms. This can be
-        experienced by rotating an axis so that it aligns with another axis. With 2 axes aligned, rotating either
+        experienced by rotating an axis so that it aligns with another axis. With 2 axes aligned, rotating one
         would result in the same rotation so this extra axis becomes redundant. Not only is it redundant but you
-        lose an axis to rotate it about independently of the other angles. When gimbal lock occurs, it can become
+        lose an axis to rotate it about independently of the other axes. When gimbal lock occurs, it can become
         difficult to get out of, especially when it's not certain what rotation resulted in the lock.
 
         **Gimbal lock** can be a serious problem, but the simplicity of using **Euler** angles makes it the goto method for most.
@@ -827,7 +827,7 @@
         and has minimal storage requirements. It doesn't suffer from the same issues as **Euler** transforms and
         is superior when used to smoothly interpolate spherical motion.
 
-        Like with **complex numbers**, **quaternation operations** are identical. Now that were dealing with 3 additional
+        Like with **complex numbers**, **quaternation operations** are identical. Now that we're dealing with 3 additional
         dimensions, new imaginary numbers are introduced. Let's introduce them now.
 
         <KatexBlock>
@@ -837,9 +837,9 @@
         \boldsymbol i \boldsymbol j = -\boldsymbol j \boldsymbol i = \boldsymbol k\\
         </KatexBlock>
 
-        These properties are used to resolve multiplication involving those imaginary numbers. For example, multiply
+        These properties are used to resolve multiplication involving those imaginary numbers. For example, multiplying
         by <KatexSpan>\boldsymbol i</KatexSpan> results in a <KatexSpan>90 \degree</KatexSpan> rotation. Multiplying by
-        <KatexSpan>\boldsymbol i</KatexSpan> again <KatexSpan>\boldsymbol i^2</KatexSpan> it becomes **-1** which lies on the **x-axis** in the
+        <KatexSpan>\boldsymbol i</KatexSpan> again (<KatexSpan>\boldsymbol i^2</KatexSpan>) it becomes **-1** which lies on the **x-axis** in the
         **complex plane**. With **quaternions**, multiplying the <KatexSpan>\boldsymbol i</KatexSpan> with <KatexSpan>\boldsymbol j</KatexSpan> will give you
         <KatexSpan>\boldsymbol k</KatexSpan>. Relating back to the
         cartesian coordinate system, <KatexSpan>\hat x \times \hat y = \hat z</KatexSpan>. This should look familiar to you. It's the cross product.
@@ -866,7 +866,8 @@
         equals the half-angle. Multiplying by <KatexSpan>\boldsymbol q</KatexSpan>, involves a half-angle rotation, and <KatexSpan>\boldsymbol q^{-1}</KatexSpan>
         doubles that rotation.
 
-        There are whole collections of books devoted to **quaternions** alone. It's complex topic. **4D** rotations are hard
+
+        There are whole collections of books devoted to **quaternions** alone. It's a complex topic. **4D** rotations are hard
         to visualize and I won't bore you with more details. However, if there is one thing I want you to get out of this then it
         is to understand that **unit quaternions** allow you to rotate about an abitrary axis. You can use the method above
         to perform the transform, plugging in the axis and the half-angle and you shouldn't need to know anything else.

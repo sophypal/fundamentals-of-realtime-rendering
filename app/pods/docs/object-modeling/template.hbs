@@ -2,7 +2,7 @@
     <Heading @title='Object Modeling' @subtitle='The building blocks'>
         The subject of object modeling is more art then science. While I won't be able to cover how best to model
         a dinosaur in this series, I'll focus my attention on the workflow. A mesh can be as simple as a single
-        triangle face, or be as complex as a T-rex, rigged, skinned, and textured. In this article, I'll talk
+        triangular face, or be as complex as a T-rex, rigged, skinned, and textured. In this article, I'll talk
         about what it takes to bring a T-rex to life.
     </Heading>
     <ProseMarkdown>
@@ -25,7 +25,7 @@
     <ProseMarkdown>
         ## Indexed Vertex Data
 
-        Artist would use programs like Maya or Blender to create this data. That data is essentially a list of faces with
+        Artists would use programs like Maya or Blender to create this data. That data is essentially a list of faces with
         each face containing 3 vertices. A renderer can simply iterate through the list of faces and invoke basic APIs for
         drawing a triangle primitive.
 
@@ -39,7 +39,7 @@
     </ProseMarkdown>
     <ProseFigure
         @figureId='2'
-        @figureCaption='Vertex data is stored separate from the primitive data (tries). Index data defines the vertices to be used when rendering triangles.'
+        @figureCaption='Vertex data is stored separate from the primitive data (tris). Index data defines the vertices to be used when rendering triangles.'
         @imageUrl={{root-url 'figures/vertex-index-buffer.png'}}
         @vertical={{true}}
     />
@@ -53,13 +53,13 @@
 
         ## Wireframes Are Boring
 
-        Let's add some life to this model and introduce some color. I've taken the libery to supplement the vertex
+        Let's add some life to this model and introduce some color. I've taken the liberty to supplement the vertex
         data with color information. That means every vertex would get a color value.
     </ProseMarkdown>
     <ProseFigure
         @componentName='figures/object-modeling'
         @figureId='3'
-        @figureCaption='Smooth shading with vertex colors'
+        @figureCaption='Smooth shading with vertex colors. You will notice that the pixels between the verts are being colored, not just the verts. In smooth shading, colors in between verts are blended.'
         @props={{hash mode='vertex-colors'}}
     />
     <ProseMarkdown>
@@ -75,12 +75,12 @@
     />
     <ProseMarkdown>
         It's looking much better but something seems off right? If you noticed it doesn't have any self-casted shadows, then
-        you're right. It's not practical to using ray-tracing algorithms in real-time just yet. For realtime
+        you're right. It's not practical to using ray-tracing algorithms in realtime just yet. For realtime
         renderers, shadows are added afterwards.
 
         Outside in real life, even though there is a single directional light source, there are infinitely many
         light sources coming from all directions. Achieving this effect in realtime renderers is not easily done.
-        You can add an ambient light source that is suppose to mimic a global light intensity but it's not the same
+        You can add an ambient light source that is supposed to mimic a global light intensity but it's not the same
         and it doesn't produce the soft shadows you see in real life.
 
         There's still more we can do to this dinosaur to make it look more appealing. Before, we just assigned color
@@ -93,7 +93,7 @@
         artists need to tell the renderer how this texture will wrap around the mesh and the process is called UV mapping.
 
         UV mapping is a process which takes a **3**-dimensional object and unfold it so all it's faces can be spread out
-        in **2**-dimensional space. UV stands for the coordinates axes in texture space. Since most textures are **2**-dimensional,
+        in **2**-dimensional space. UV stands for the coordinate axes in texture space. Since most textures are **2**-dimensional,
         it has **2** axes <KatexSpan>\boldsymbol{u}</KatexSpan> and <KatexSpan>\boldsymbol{v}</KatexSpan>. Think of UV mapping as
         tearing up your clothes at the seams and laying them out on a flat table.
 
@@ -124,22 +124,22 @@
         Textures can be used to improve the horrible lighting quality due to not being able to render with global
         illumination (a technique for rendering soft shadows).
 
-        Not only can we bake per-pixel color info. We can bake **normals** and **AO**. Texture baking is a process transferring
+        Not only can we bake per-pixel color info. We can bake **normals** and **AO**. Texture baking is a process of transferring
         high resolution information and storing it in an image where it is applied on a lower resolution object. Texture
-        baking saves the renderer from having to precompute things on the fly but it also used to add additional input
+        baking saves the renderer from having to precompute things on the fly but it is also used to add additional input
         from the artist that can't be calculated from vertex data alone.
 
         Having normals backed allows us to provide curvature data at much higher resolution then a low-poly model can provide.
         Normals can help add cracks and crevices without needing to model in that info. Adding normals don't add any extra
         geometry but is merely an illusion. This is not unlike a painting shaded to give the illusion of depth. A normal map
-        is a **24-bit** texture carrying unit directional normals but encoded as **RGB** color
+        is a **24-bit** texture carrying unit directional normals but encoded as **RGB** color.
 
         **AO**, which stands for *ambient occlusion*, is another trick up our sleves. Just as normals can give you a sense of
-        greater depth, adding **AO** can add to the effect by shading in areas that are occluded darker. This gives us
-        the illusion of shelf-shadows. An *AO* map is gray scale image where black means that area is occluded.
+        greater depth, adding **AO** can add to the effect by darkening in areas that are occluded. This gives us
+        the illusion of shelf-shadows. An *AO* map is a grayscale image where black means that area is occluded.
 
-        All these texture maps, except for the color, aren't normally generated by hand. Instead, special programs
-        like **zBrush** and **Substance Designer/Painter** are used to either procedurally generate them or allows the artist
+        All these texture maps, except maybe for color, aren't normally generated by hand. Instead, special programs
+        like **zBrush** and **Substance Designer/Painter** are used to either procedurally generate them or allow the artist
         to sculpt directly on the model.
 
         There are other commonly used maps like metalness and roughness which is used in physically-based shaders to achieve

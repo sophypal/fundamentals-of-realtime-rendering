@@ -48,7 +48,7 @@
         measure dimensions of shapes with width, height, depth and positions with **x**, **y**, and **z**. Although our choice of
         **x**, **y**, **z** are often arbitrary and relative to the situation. When I designed my new kitchen, I used the corner
         as my center and measured relative to that. Doing that in a virtual simulation requires we represent those
-        **3**-dimensional quanties in a virtual space and a conventional frame of reference need to be established.
+        **3**-dimensional quanties in a virtual space and a conventional frame of reference needs to be established.
 
         The **3** values associated with **x**, **y**, and **z** can be group together as a single vector, where a vector represents
         a point in space or a direction. Mathematically, a vector is really just a structure that contains multiple values.
@@ -76,7 +76,7 @@
     <ProseMarkdown>
         ## Unit vectors
 
-        Directional vectors that are used soley to represent direction where length doesn't matter. These vectors can
+        Directional vectors are used soley to represent direction where length doesn't matter. These vectors can
         be normalized so it's length is always **1**. I previously mentioned that directional vectors can represent an axis in **3D** space.
         What does that mean exactly? Can't we just assume that up is up, down is down, and right is right? Well, when I say it like
         that it's obvious that up should be up but up is relative. Up on Earth is commonly perpendicular to the ground. In order
@@ -92,8 +92,8 @@
         specified as unit vectors. The axes in a frame commonly established in **3D** are all perpendicular to each other.
         Unit vectors in a coordinate frame are called basis vectors.
 
-        An order pair of numbers like <KatexSpan>(1, 2, 3)</KatexSpan> can be rewritten as a linear combination of the basic vectors. <KatexSpan>\boldsymbol{p} = 1\hat{x} + 2\hat{y} + 3\hat{z}</KatexSpan>
-        Each coordinate is a number that is multiplied by their basis vectors. Writing vectors out with <KatexSpan>(v_x, v_y, z)</KatexSpan> is just
+        An order pair of numbers like <KatexSpan>(1, 2, 3)</KatexSpan> can be rewritten as a linear combination of the basis vectors. <KatexSpan>\boldsymbol{p} = 1\hat{x} + 2\hat{y} + 3\hat{z}</KatexSpan>
+        Each coordinate is a number that is multiplied by their basis vectors. Writing vectors out with <KatexSpan>(v_x, v_y, v_z)</KatexSpan> is just
         shorthand.
 
         ## Which Way Is Up?
@@ -115,18 +115,20 @@
         <KatexSpan>[1,2,3]</KatexSpan>
         or column-major <KatexSpan>\begin{bmatrix}1 \\ 2 \\ 3 \end{bmatrix}</KatexSpan>.
 
-        You might see column vectors shown as rows but transposed, meaning flipped so that rows becomes the columns.
+        You might see column vectors shown as rows but transposed, meaning flipped so that rows become the columns.
         <KatexSpan>[1,2,3]^T</KatexSpan>.
 
-        This column-major vector format is become more clear in the chapter on transformation.
+        This column-major vector format will become more clear in the chapter on transformation.
 
         ## Surface normals
 
-        Planes are often described with a normal <KatexSpan>\boldsymbol{n}</KatexSpan> and a distance <KatexSpan>d</KatexSpan>. In math, a plane is a flat surface is extends to infinity.
-        This normal is a directional vector that descibes the orientation of the plane. The distance property <KatexSpan>d</KatexSpan>
-        describes how far away this surface is from the origin, along the plane normal.
+        Planes are often described with a normal <KatexSpan>\boldsymbol{n}</KatexSpan> and a distance <KatexSpan>d</KatexSpan>.
+        The plane normal is a directional vector that descibes the orientation of the plane
+        The distance property <KatexSpan>d</KatexSpan> describes how far away this surface is from the origin, along the plane normal.
+        In math, a plane is a flat surface that extends to infinity. This surface is the set of all points on the plane a distance <KatexSpan>d</KatexSpan>
+        away from the origin and oriented in the normal direction.
 
-        Surface normals are really plane normals. They are always perpendicular to the surface their origin is always
+        Surface normals are plane normals. They are always perpendicular to the surface. Their origin is always
         assumed to be relative to the surface's origin. They are critical in shading algorithms, collision detection,
         and other angle/distance measurements.
     </ProseMarkdown>
@@ -139,7 +141,7 @@
     <ProseMarkdown>
         ## Describe Our Scene With Vectors
 
-        Let's use vectors to represent some quantities we'd find in a simple scene. A scene compressed of a single triangle
+        Let's use vectors to represent some quantities we'd find in a simple scene. A scene comprised of a single triangular
         surface and one light source. Here's what we need.
 
         A triangle is made up of *3* points <KatexSpan> \triangle{ABC}</KatexSpan>. Let's call those points <KatexSpan>\boldsymbol{A}</KatexSpan>, <KatexSpan>\boldsymbol{B}</KatexSpan>, and <KatexSpan>\boldsymbol{C}</KatexSpan>.
