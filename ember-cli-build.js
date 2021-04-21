@@ -18,7 +18,7 @@ const purgeCSS = {
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     fingerprint: {
-      exclude: ['prism-components'],
+      exclude: ['prism-components', 'models', 'textures'],
     },
     ace: {
       themes: ['monokai'],
