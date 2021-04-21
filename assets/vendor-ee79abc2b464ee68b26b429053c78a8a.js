@@ -8005,7 +8005,7 @@ s.push=t,s=s.slice()
 for(var l=0;l<s.length;l++)t(s[l])
 var c=u
 return o.push([5,2]),n()}([,,function(e,t){window._eai_r=require,window._eai_d=define},,,function(e,t,n){n(2),e.exports=n(6)},function(e,t,n){var r,i,o
-"undefined"!=typeof document&&(n.p=(r=document.querySelectorAll("script"))[r.length-1].src.replace(/\/[^/]*$/,"/")),e.exports=(i=_eai_d,o=_eai_r,window.emberAutoImportDynamic=function(e){return 1===arguments.length?o("_eai_dyn_"+e):o("_eai_dynt_"+e)(Array.prototype.slice.call(arguments,1))},i("@tweenjs/tween.js",[],(function(){return n(7)})),i("dat.gui",[],(function(){return n(8)})),i("katex/contrib/auto-render/auto-render",[],(function(){return n(19)})),i("lodash",[],(function(){return n(9)})),i("marked",[],(function(){return n(10)})),i("three",[],(function(){return n(0)})),i("three/examples/jsm/controls/OrbitControls",[],(function(){return n(11)})),i("three/examples/jsm/loaders/GLTFLoader",[],(function(){return n(12)})),i("three/examples/jsm/loaders/OBJLoader",[],(function(){return n(13)})),void i("three/examples/jsm/loaders/RGBELoader",[],(function(){return n(14)})))}]);(window.webpackJsonp_ember_auto_import_=window.webpackJsonp_ember_auto_import_||[]).push([[2],[function(e,t,n){"use strict"
+"undefined"!=typeof document&&(n.p=(r=document.querySelectorAll("script"))[r.length-1].src.replace(/\/[^/]*$/,"/")),e.exports=(i=_eai_d,o=_eai_r,window.emberAutoImportDynamic=function(e){return 1===arguments.length?o("_eai_dyn_"+e):o("_eai_dynt_"+e)(Array.prototype.slice.call(arguments,1))},i("@tweenjs/tween.js",[],(function(){return n(7)})),i("dat.gui",[],(function(){return n(8)})),i("katex/contrib/auto-render/auto-render",[],(function(){return n(20)})),i("lodash",[],(function(){return n(9)})),i("marked",[],(function(){return n(10)})),i("three",[],(function(){return n(0)})),i("three/examples/jsm/controls/OrbitControls",[],(function(){return n(11)})),i("three/examples/jsm/loaders/GLTFLoader",[],(function(){return n(12)})),i("three/examples/jsm/loaders/MTLLoader",[],(function(){return n(13)})),i("three/examples/jsm/loaders/OBJLoader",[],(function(){return n(14)})),void i("three/examples/jsm/loaders/RGBELoader",[],(function(){return n(15)})))}]);(window.webpackJsonp_ember_auto_import_=window.webpackJsonp_ember_auto_import_||[]).push([[2],[function(e,t,n){"use strict"
 var r
 function i(e){return(i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function o(e,t,n){return(o="undefined"!=typeof Reflect&&Reflect.get?Reflect.get:function(e,t,n){var r=function(e,t){for(;!Object.prototype.hasOwnProperty.call(e,t)&&null!==(e=d(e)););return e}(e,t)
 if(r){var i=Object.getOwnPropertyDescriptor(r,t)
@@ -13524,6 +13524,50 @@ r.push(e(c,t,i,o))}return Promise.all(r)}))}return function(t){var n=this.json,i
 o.name&&(a.name=this.createUniqueName(o.name)),C(a,o),o.extensions&&R(i,a,o)
 for(var s=o.nodes||[],u=[],l=0,c=s.length;l<c;l++)u.push(e(s[l],a,n,this))
 return Promise.all(u).then((function(){return a}))}}(),e}()},function(e,t,n){"use strict"
+n.r(t),n.d(t,"MTLLoader",(function(){return i}))
+var r=n(0),i=function(e){r.Loader.call(this,e)}
+i.prototype=Object.assign(Object.create(r.Loader.prototype),{constructor:i,load:function(e,t,n,i){var o=this,a=""===this.path?r.LoaderUtils.extractUrlBase(e):this.path,s=new r.FileLoader(this.manager)
+s.setPath(this.path),s.setRequestHeader(this.requestHeader),s.setWithCredentials(this.withCredentials),s.load(e,(function(n){try{t(o.parse(n,a))}catch(t){i?i(t):console.error(t),o.manager.itemError(e)}}),n,i)},setMaterialOptions:function(e){return this.materialOptions=e,this},parse:function(e,t){for(var n=e.split("\n"),r={},o=/\s+/,a={},s=0;s<n.length;s++){var u=n[s]
+if(0!==(u=u.trim()).length&&"#"!==u.charAt(0)){var l=u.indexOf(" "),c=l>=0?u.substring(0,l):u
+c=c.toLowerCase()
+var h=l>=0?u.substring(l+1):""
+if(h=h.trim(),"newmtl"===c)r={name:h},a[h]=r
+else if("ka"===c||"kd"===c||"ks"===c||"ke"===c){var d=h.split(o,3)
+r[c]=[parseFloat(d[0]),parseFloat(d[1]),parseFloat(d[2])]}else r[c]=h}}var f=new i.MaterialCreator(this.resourcePath||t,this.materialOptions)
+return f.setCrossOrigin(this.crossOrigin),f.setManager(this.manager),f.setMaterials(a),f}}),i.MaterialCreator=function(e,t){this.baseUrl=e||"",this.options=t,this.materialsInfo={},this.materials={},this.materialsArray=[],this.nameLookup={},this.side=this.options&&this.options.side?this.options.side:r.FrontSide,this.wrap=this.options&&this.options.wrap?this.options.wrap:r.RepeatWrapping},i.MaterialCreator.prototype={constructor:i.MaterialCreator,crossOrigin:"anonymous",setCrossOrigin:function(e){return this.crossOrigin=e,this},setManager:function(e){this.manager=e},setMaterials:function(e){this.materialsInfo=this.convert(e),this.materials={},this.materialsArray=[],this.nameLookup={}},convert:function(e){if(!this.options)return e
+var t={}
+for(var n in e){var r=e[n],i={}
+for(var o in t[n]=i,r){var a=!0,s=r[o],u=o.toLowerCase()
+switch(u){case"kd":case"ka":case"ks":this.options&&this.options.normalizeRGB&&(s=[s[0]/255,s[1]/255,s[2]/255]),this.options&&this.options.ignoreZeroRGBs&&0===s[0]&&0===s[1]&&0===s[2]&&(a=!1)}a&&(i[u]=s)}}return t},preload:function(){for(var e in this.materialsInfo)this.create(e)},getIndex:function(e){return this.nameLookup[e]},getAsArray:function(){var e=0
+for(var t in this.materialsInfo)this.materialsArray[e]=this.create(t),this.nameLookup[t]=e,e++
+return this.materialsArray},create:function(e){return void 0===this.materials[e]&&this.createMaterial_(e),this.materials[e]},createMaterial_:function(e){var t=this,n=this.materialsInfo[e],i={name:e,side:this.side}
+function o(e,n){if(!i[e]){var r,o,a=t.getTextureParams(n,i),s=t.loadTexture((r=t.baseUrl,"string"!=typeof(o=a.url)||""===o?"":/^https?:\/\//i.test(o)?o:r+o))
+s.repeat.copy(a.scale),s.offset.copy(a.offset),s.wrapS=t.wrap,s.wrapT=t.wrap,i[e]=s}}for(var a in n){var s,u=n[a]
+if(""!==u)switch(a.toLowerCase()){case"kd":i.color=(new r.Color).fromArray(u)
+break
+case"ks":i.specular=(new r.Color).fromArray(u)
+break
+case"ke":i.emissive=(new r.Color).fromArray(u)
+break
+case"map_kd":o("map",u)
+break
+case"map_ks":o("specularMap",u)
+break
+case"map_ke":o("emissiveMap",u)
+break
+case"norm":o("normalMap",u)
+break
+case"map_bump":case"bump":o("bumpMap",u)
+break
+case"map_d":o("alphaMap",u),i.transparent=!0
+break
+case"ns":i.shininess=parseFloat(u)
+break
+case"d":(s=parseFloat(u))<1&&(i.opacity=s,i.transparent=!0)
+break
+case"tr":s=parseFloat(u),this.options&&this.options.invertTrProperty&&(s=1-s),s>0&&(i.opacity=1-s,i.transparent=!0)}}return this.materials[e]=new r.MeshPhongMaterial(i),this.materials[e]},getTextureParams:function(e,t){var n,i={scale:new r.Vector2(1,1),offset:new r.Vector2(0,0)},o=e.split(/\s+/)
+return(n=o.indexOf("-bm"))>=0&&(t.bumpScale=parseFloat(o[n+1]),o.splice(n,2)),(n=o.indexOf("-s"))>=0&&(i.scale.set(parseFloat(o[n+1]),parseFloat(o[n+2])),o.splice(n,4)),(n=o.indexOf("-o"))>=0&&(i.offset.set(parseFloat(o[n+1]),parseFloat(o[n+2])),o.splice(n,4)),i.url=o.join(" ").trim(),i},loadTexture:function(e,t,n,i,o){var a,s=void 0!==this.manager?this.manager:r.DefaultLoadingManager,u=s.getHandler(e)
+return null===u&&(u=new r.TextureLoader(s)),u.setCrossOrigin&&u.setCrossOrigin(this.crossOrigin),a=u.load(e,n,i,o),void 0!==t&&(a.mapping=t),a}}},function(e,t,n){"use strict"
 n.r(t),n.d(t,"OBJLoader",(function(){return i}))
 var r=n(0),i=function(){var e=/^[og]\s*(.+)?/,t=/^mtllib /,n=/^usemtl /,i=/^usemap /,o=new r.Vector3,a=new r.Vector3,s=new r.Vector3,u=new r.Vector3,l=new r.Vector3
 function c(){var e={objects:[],object:{},vertices:[],normals:[],colors:[],uvs:[],materials:{},materialLibraries:[],startObject:function(e,t){if(this.object&&!1===this.object.fromDeclaration)return this.object.name=e,void(this.object.fromDeclaration=!1!==t)
