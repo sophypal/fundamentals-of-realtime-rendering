@@ -11,6 +11,7 @@
                 @cameraLookAt={{@cameraLookAt}}
                 @onSceneInsert={{action this.onSceneInsert}}
                 @hdr={{@hdr}}
+                @hasLights={{hasLights}}
             as |parent|>
                 {{yield parent}}
             </Scene>
@@ -24,7 +25,7 @@
                         </div>
                     {{/if}}
                 {{else}}
-                    {{#if this.isFullscreenEnabled}}
+                    {{#if this.isFullScreenEnabed}}
                     <div class='control absolute bottom-1 right-1 cursor-pointer' {{on 'click' this.onEnterFullscreen}}>
                     <svg class='text-white' fill='currentColor' width="1.5rem" height="1.5rem" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                        <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -42,9 +43,11 @@
                     </svg>
                     </div>
                     {{/if}}
+                {{/if}}
+                <div class='control absolute flex bottom-1 left-1'>
                     {{#if hasAnimation}}
                         {{#if isPlaying}}
-                            <div class='control absolute bottom-1 left-1 cursor-pointer' {{on 'click' this.onPause}}>
+                            <div class='control cursor-pointer' {{on 'click' this.onPause}}>
                                 <svg class='text-white' fill='currentColor' xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 28 42">
                                     <g>
                                         <rect width="10" height="42" rx="3" ry="3"/>
@@ -53,7 +56,7 @@
                                 </svg>
                             </div>
                         {{else}}
-                        <div class='control absolute bottom-1 left-1 cursor-pointer' {{on 'click' this.onPlay}}>
+                        <div class='control cursor-pointer' {{on 'click' this.onPlay}}>
                             <svg width="30px" height="30px" viewBox="0 0 11 14">
                                 <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="Rounded" transform="translate(-753.000000, -955.000000)">
@@ -70,7 +73,8 @@
                         </div>
                         {{/if}}
                     {{/if}}
-                {{/if}}
+                    <SvgIcon @name='light' width='30px' height='30px' class='control cursor-pointer {{if hasLights 'text-white'}}' {{on 'click' this.toggleLights}}/>
+                </div>
             </div>
         </div>
         {{#if this.showEditor }}

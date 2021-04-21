@@ -57,6 +57,7 @@ export default class extends SceneObject {
 
     pauseThree() {
         cancelAnimationFrame(this.raf);
+        this.raf = null;
     }
 
     setupThree(element) {
@@ -129,7 +130,13 @@ export default class extends SceneObject {
     animate() {
         this.raf = requestAnimationFrame(this.animate);
 
-        this.glRenderer.render(this.object, this.camera);
+        // user code can error out during render which we don't want while they're editing
+        try {
+            this.glRenderer.render(this.object, this.camera);
+        } catch (e) {
+            this.pauseThree();
+            console.error(e);
+        }
     }
 
     @action

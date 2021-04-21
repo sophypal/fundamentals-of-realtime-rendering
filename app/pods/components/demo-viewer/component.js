@@ -42,6 +42,9 @@ export default class extends Component {
     @tracked
     isPlaying = false;
 
+    @tracked
+    hasLights = true;
+
     editorValue = new EditorValues();
 
     get container() {
@@ -88,10 +91,15 @@ export default class extends Component {
     }
 
     reloadScene() {
-        this.cleanupResources(this.object);
-        this.scene.remove(this.object);
-        this.object.clear();
-        this.animCallback = null;
+        try {
+            this.cleanupResources(this.object);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            this.scene.remove(this.object);
+            this.object.clear();
+            this.animCallback = null;
+        }
 
         try {
             runCode(this.editorValue, THREE, this.object, this.camera, (cb) => {
@@ -99,10 +107,14 @@ export default class extends Component {
             });
         } catch (e) {
             this.animCallback = null;
+            this.sceneComponent.pauseThree();
             console.info('user code failed to eval', e);
         }
 
         this.scene.add(this.object);
+        if (this.sceneComponent.raf === null) {
+            this.sceneComponent.animate();
+        }
     }
 
     cleanupResources(object) {
@@ -128,6 +140,10 @@ export default class extends Component {
     }
 
     addLights(scene) {
+        if (this.lights) {
+            return;
+        }
+
         const lights = [];
         lights[0] = new THREE.PointLight(0xffffff, 1, 0);
         lights[1] = new THREE.PointLight(0xffffff, 1, 0);
@@ -140,6 +156,15 @@ export default class extends Component {
         scene.add(lights[0]);
         scene.add(lights[1]);
         scene.add(lights[2]);
+
+        this.lights = lights;
+    }
+
+    removeLights(scene) {
+        this.lights.forEach((light) => {
+            scene.remove(light);
+        });
+        this.lights = null;
     }
 
     setupControls(element) {
@@ -350,5 +375,16 @@ export default class extends Component {
     onLeave() {
         cancelAnimationFrame(this.raf);
         this.raf = null;
+    }
+
+    @action
+    toggleLights() {
+        this.hasLights = !this.hasLights;
+
+        if (this.hasLights) {
+            this.addLights(this.scene);
+        } else {
+            this.removeLights(this.scene);
+        }
     }
 }
