@@ -5,6 +5,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader';
 import { tracked } from '@glimmer/tracking';
 
 export default class extends SceneObject {
@@ -17,6 +18,7 @@ export default class extends SceneObject {
         gltf: new GLTFLoader(this.loadingManager),
         rgbe: new RGBELoader(this.loadingManager),
         obj: new OBJLoader(this.loadingManager),
+        mtl: new MTLLoader(this.loadingManager),
     };
 
     defaults = {

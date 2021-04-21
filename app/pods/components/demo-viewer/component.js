@@ -8,10 +8,10 @@ import TWEEN from '@tweenjs/tween.js';
 import _ from 'lodash';
 import { isNone, isPresent } from '@ember/utils';
 
-function runCode(editorValue, THREE, scene, camera, animate) {
+function runCode(editorValue, THREE, scene, camera, animate, loaders) {
     return Function(
-        `"use strict"; return (function (THREE, scene, camera, vertexShaderSource, fragmentShaderSource, animate) {${editorValue.scene}})`
-    )()(THREE, scene, camera, editorValue.vertex, editorValue.fragment, animate);
+        `"use strict"; return (function (THREE, scene, camera, vertexShaderSource, fragmentShaderSource, animate, loaders) {${editorValue.scene}})`
+    )()(THREE, scene, camera, editorValue.vertex, editorValue.fragment, animate, loaders);
 }
 
 class EditorValues {
@@ -75,7 +75,7 @@ export default class extends Component {
     constructor() {
         super(...arguments);
 
-        this.editorValue.scene = '/* globals THREE, scene, camera, vertexShadersource, fragmentShaderSource, animate */\n'.concat(
+        this.editorValue.scene = '/* globals THREE, scene, camera, vertexShadersource, fragmentShaderSource, animate, loaders */\n'.concat(
             this.args.sceneEditorValue
         );
         this.editorValue.vertex = this.args.vertexEditorValue;
@@ -104,7 +104,7 @@ export default class extends Component {
         try {
             runCode(this.editorValue, THREE, this.object, this.camera, (cb) => {
                 this.animCallback = cb;
-            });
+            }, this.sceneComponent.loaders);
         } catch (e) {
             this.animCallback = null;
             this.sceneComponent.pauseThree();
